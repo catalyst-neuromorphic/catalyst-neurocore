@@ -155,7 +155,7 @@ All tiers include access to the private `neurocore` repository with full source 
 </p>
 
 1. **Choose a tier** at [github.com/sponsors/Mr-wabbit](https://github.com/sponsors/Mr-wabbit)
-2. **Access is granted automatically** to the private `neurocore` repository
+2. **Access is granted automatically** to the private [`catalyst-neuromorphic/neurocore`](https://github.com/catalyst-neuromorphic/neurocore) repository
 3. **Clone and start building** — full SDK, all tests, all backends
 
 No waiting. No approval process. Sponsor, get access, start simulating.
