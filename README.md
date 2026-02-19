@@ -1,6 +1,6 @@
 # Catalyst Neurocore SDK
 
-**Python SDK for the Catalyst neuromorphic processor family — 128 cores, 131K neurons, full Loihi 2 parity, 85.9% SHD benchmark.**
+**Python SDK for the Catalyst neuromorphic processor family — 128 cores, 131K neurons, Loihi 2 feature parity*, 85.9% SHD benchmark.**
 
 > *Source-available under BSL 1.1. Free for non-commercial research. Commercial use requires a paid licence.*
 
@@ -40,7 +40,10 @@ One SDK. Three backends. Zero cloud dependencies.
 | Stochastic threshold noise | Per-neuron LFSR | Per-neuron LFSR |
 | Synapse encodings | Sparse, Dense, Population | Sparse, Dense, Population |
 | Embedded processors | Triple RV32IMF RISC-V | Triple RV32IMF RISC-V |
-| **Loihi parity** | **Loihi 1 (10/10)** | **Loihi 2 (10/10)** |
+| **Loihi parity** | **Loihi 1\*** | **Loihi 2\*** |
+
+
+> **\*** *Catalyst matches or exceeds all Loihi functional features (neuron models, learning engine, compartments, graded spikes, delays, noise, synapse formats). Synapse counts per core differ from Loihi's physical implementation. The "parity" designation refers to architectural feature equivalence, not identical physical specifications.*
 
 ---
 
@@ -120,7 +123,7 @@ Full comparison against Intel Loihi 1 and Loihi 2:
 | Homeostasis | Yes | Yes | Yes |
 | Programmable delays | Yes | Yes | Yes |
 | Embedded processors | 3x LMT | 6x LMT | 3x RV32IMF |
-| **Score** | **10/10** | **10/10** | **10/10** |
+| **Score** | **10/10** | **10/10** | **10/10\*** |
 
 ---
 
@@ -146,7 +149,7 @@ Neurocore is source-available under the **Business Source License 1.1 (BSL 1.1)*
 
 | | `neurocore` (N1) | `catalyst-n2` (N2) |
 |---|---|---|
-| Loihi parity | Loihi 1 (10/10) | Loihi 2 (10/10) |
+| Loihi parity | Loihi 1\* | Loihi 2\* |
 | SDK + tests | v3.7.0, 3,091 tests | Full N2 SDK |
 | RTL / Verilog | N1 processor HDL | N2 processor HDL |
 | FPGA validation | AWS F2 (VU47P) | AWS F2 + Arty A7 |
@@ -210,4 +213,4 @@ Paper PDF available to sponsors in the private repository.
 
 ---
 
-*Built by one person. 238 development phases. 3,091 tests. Full Loihi 2 parity.*
+*Built by one person. 238 development phases. 3,091 tests. Loihi 2 feature parity.*
