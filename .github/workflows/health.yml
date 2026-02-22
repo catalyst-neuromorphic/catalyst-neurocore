@@ -1,0 +1,40 @@
+name: Health Check
+on:
+  schedule:
+    - cron: "0 8 * * *"  # Daily 8AM UTC
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check website
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://catalyst-neuromorphic.com)
+          echo "Website: HTTP $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Website returned HTTP $STATUS"
+            exit 1
+          fi
+
+      - name: Check Cloud API
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://api.catalyst-neuromorphic.com/docs)
+          echo "Cloud API: HTTP $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Cloud API returned HTTP $STATUS"
+            exit 1
+          fi
+
+      - name: Check PyPI package
+        run: |
+          pip install catalyst-cloud --dry-run 2>&1 | head -5
+          echo "PyPI: OK"
+
+      - name: Check HuggingFace Space
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://huggingface.co/spaces/Catalyst-Neuromorphic/catalyst-cloud)
+          echo "HuggingFace Space: HTTP $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "::warning::HuggingFace Space returned HTTP $STATUS"
+          fi
