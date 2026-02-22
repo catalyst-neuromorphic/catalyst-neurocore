@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
-**Neuromorphic processor architecture — 128 cores, 131K neurons, full Loihi 2 feature parity, 85.9% SHD benchmark.**
+**Neuromorphic processor architecture — 128 cores, 131K neurons, full Loihi 2 feature parity, <!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->% SHD benchmark.**
 
 > Two generations of neuromorphic silicon. Validated on real FPGA hardware. Accessible via cloud API or dedicated dev boards.
 
@@ -50,11 +50,11 @@ Catalyst is a neuromorphic processor family designed for energy-efficient spikin
 
 | Metric | Value |
 |---|---|
-| SDK test suite | **3,091 tests** |
-| Feature coverage | **155 total** (152 FULL, 3 HW_ONLY) |
+| SDK test suite | **<!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> tests** |
+| Feature coverage | **<!-- STAT:FEATURES_TOTAL -->155<!-- /STAT --> total** (<!-- STAT:FEATURES_FULL -->152<!-- /STAT --> FULL, <!-- STAT:FEATURES_HW_ONLY -->3<!-- /STAT --> HW_ONLY) |
 | FPGA validation | 28/28 pass (AWS F2, Xilinx VU47P, 62.5 MHz) |
 | RTL testbenches | 25 (98 scenarios, 0 failures) |
-| SHD benchmark | **85.9%** (float) / **85.4%** (quantized) |
+| SHD benchmark | **<!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->%** (float) / **<!-- STAT:SHD_QUANT -->85.4<!-- /STAT -->%** (quantized) |
 
 ---
 
@@ -66,8 +66,8 @@ Spoken digit classification (20 classes, 700 input channels, temporal spike patt
 
 | Configuration | Accuracy |
 |---|---|
-| Float32 weights | **85.9%** |
-| 16-bit quantized | **85.4%** |
+| Float32 weights | **<!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->%** |
+| 16-bit quantized | **<!-- STAT:SHD_QUANT -->85.4<!-- /STAT -->%** |
 | 8-bit quantized | 83.1% |
 
 Trained with surrogate gradient descent, deployed on Catalyst hardware model with full fixed-point dynamics.
@@ -192,4 +192,4 @@ Back independent neuromorphic silicon development via [GitHub Sponsors](https://
 
 ---
 
-*Built by one person. 238 development phases. 3,091 tests. Loihi 2 feature parity.*
+*Built by one person. 238 development phases. <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> tests. Loihi 2 feature parity.*
