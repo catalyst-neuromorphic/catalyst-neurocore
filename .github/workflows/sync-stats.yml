@@ -23,6 +23,7 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
 
       - name: Update README stats
+        id: update-stats
         env:
           PAYLOAD: ${{ toJSON(github.event.client_payload) }}
           EVENT_NAME: ${{ github.event_name }}
@@ -66,6 +67,10 @@ jobs:
           with open("README.md", "w") as f:
               f.write(content)
 
+          # Write resolved payload for downstream dispatch
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"payload={json.dumps(stats)}\n")
+
           print("Stats updated in README.md")
           for k, v in val_map.items():
               print(f"  {k}: {v}")
@@ -81,11 +86,9 @@ jobs:
 
       - name: Trigger website sync
         if: success()
-        env:
-          PAYLOAD: ${{ toJSON(github.event.client_payload) }}
         run: |
           curl -X POST \
             -H "Authorization: token ${{ steps.app-token.outputs.token }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/catalyst-neuromorphic/catalyst-website/dispatches \
-            -d "{\"event_type\": \"stats-update\", \"client_payload\": $PAYLOAD}"
+            -d '{"event_type": "stats-update", "client_payload": ${{ steps.update-stats.outputs.payload }}}'

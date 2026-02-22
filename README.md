@@ -152,7 +152,7 @@ pip install catalyst-cloud
 
 ### FPGA Dev Boards
 
-Physical hardware with the Catalyst bitstream. Coming to [Crowd Supply](https://www.crowdsupply.com/).
+Physical hardware with the Catalyst bitstream. Planned for [Crowd Supply](https://www.crowdsupply.com/).
 
 ---
 
