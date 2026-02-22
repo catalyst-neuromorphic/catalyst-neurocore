@@ -50,7 +50,7 @@ Catalyst is a neuromorphic processor family designed for energy-efficient spikin
 
 | Metric | Value |
 |---|---|
-| SDK test suite | **<!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> tests** |
+| SDK test suite | **<!-- STAT:TEST_COUNT -->139<!-- /STAT --> tests** |
 | Feature coverage | **<!-- STAT:FEATURES_TOTAL -->155<!-- /STAT --> total** (<!-- STAT:FEATURES_FULL -->152<!-- /STAT --> FULL, <!-- STAT:FEATURES_HW_ONLY -->3<!-- /STAT --> HW_ONLY) |
 | FPGA validation | 28/28 pass (AWS F2, Xilinx VU47P, 62.5 MHz) |
 | RTL testbenches | 25 (98 scenarios, 0 failures) |
@@ -192,4 +192,4 @@ Back independent neuromorphic silicon development via [GitHub Sponsors](https://
 
 ---
 
-*Built by one person. 238 development phases. <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> tests. Loihi 2 feature parity.*
+*Built by one person. 238 development phases. <!-- STAT:TEST_COUNT -->139<!-- /STAT --> tests. Loihi 2 feature parity.*
