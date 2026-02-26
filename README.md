@@ -1,6 +1,7 @@
 # Catalyst Neurocore
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094) 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
 
 **Neuromorphic processor architecture — 128 cores, 131K neurons, full Loihi 2 feature parity, <!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->% SHD benchmark.**
 
