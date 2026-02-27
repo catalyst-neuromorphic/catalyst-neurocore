@@ -61,17 +61,25 @@ Catalyst is a neuromorphic processor family designed for energy-efficient spikin
 
 ## Benchmarks
 
-### Spiking Heidelberg Digits (SHD)
+Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://github.com/catalyst-neuromorphic/catalyst-benchmarks)** — clone, train, deploy, reproduce.
 
-Spoken digit classification (20 classes, 700 input channels, temporal spike patterns):
+| Benchmark | Classes | Architecture | Neuron | Float Acc | Quant Acc | vs Loihi |
+|---|---|---|---|---|---|---|
+| **SHD** | 20 | 700→512→20 (rec) | LIF | **<!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->%** | **<!-- STAT:SHD_QUANT -->85.4<!-- /STAT -->%** | Loihi 2: 90.9% |
+| **SHD** | 20 | 700→512→20 (rec) | adLIF | *91%+ target* | *90%+ target* | Beat Loihi 1 (89%) |
+| **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | *72%+ target* | *70%+ target* | Beat Loihi 2 (69.8%) |
+| **N-MNIST** | 10 | 2312→512→256→10 | adLIF | *98%+ target* | *97%+ target* | — |
+| **DVS Gesture** | 11 | 2048→512→256→11 (rec) | adLIF | *92%+ target* | *90%+ target* | Beat Loihi 1 (89.6%) |
+| **GSC KWS** | 12 | 80→512→12 (rec) | adLIF | *91%+ target* | *89%+ target* | Beat Loihi 1 (88.5%) |
 
-| Configuration | Accuracy |
-|---|---|
-| Float32 weights | **<!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->%** |
-| 16-bit quantized | **<!-- STAT:SHD_QUANT -->85.4<!-- /STAT -->%** |
-| 8-bit quantized | 83.1% |
+All models trained with surrogate gradient BPTT, deployed to Catalyst FPGA hardware with int16 quantization.
 
-Trained with surrogate gradient descent, deployed on Catalyst hardware model with full fixed-point dynamics.
+```bash
+# Reproduce any benchmark
+git clone https://github.com/catalyst-neuromorphic/catalyst-benchmarks.git
+cd catalyst-benchmarks && pip install -e .
+python shd/train.py --neuron adlif --device cuda:0
+```
 
 ### Simulation Performance
 
