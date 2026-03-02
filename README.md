@@ -55,7 +55,7 @@ Catalyst is a neuromorphic processor family designed for energy-efficient spikin
 | Feature coverage | **<!-- STAT:FEATURES_TOTAL -->155<!-- /STAT --> total** (<!-- STAT:FEATURES_FULL -->152<!-- /STAT --> FULL, <!-- STAT:FEATURES_HW_ONLY -->3<!-- /STAT --> HW_ONLY) |
 | FPGA validation | 28/28 pass (AWS F2, Xilinx VU47P, 62.5 MHz) |
 | RTL testbenches | 25 (98 scenarios, 0 failures) |
-| SHD benchmark | **90.7%** (adLIF) / **<!-- STAT:SHD_FLOAT -->90.7<!-- /STAT -->%** (LIF baseline) |
+| SHD benchmark | **90.7%** (adLIF) / **<!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->%** (LIF baseline) |
 
 ---
 
