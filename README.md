@@ -3,22 +3,19 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094) 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
 
-**Open neuromorphic processors that rival Intel Loihi, BrainChip Akida, and SpiNNaker. Three generations of silicon, FPGA validated, cloud accessible.**
-
-> We design neuromorphic chips from the transistor up. Our latest benchmarks beat Loihi 2 on SSC (73.5% vs 69.8%) and match it on SHD (90.7% vs 90.9%). Papers, cloud API, and source access available.
+We design neuromorphic chips that beat the best, but at a fraction of the cost. Our latest benchmarks managed to beat Loihi 2 on SSC (73.5% vs 69.8%) and match it on SHD (90.7% vs 90.9%). Below you may find links to our papers, cloud API (still work in progress), and other details.
 
 ---
 
 ## What is Catalyst?
 
-Catalyst is a family of neuromorphic processors designed for energy-efficient spiking neural network inference and on-chip learning. Three generations — each pushing what open neuromorphic hardware can do. All validated on real FPGA hardware.
+Catalyst is a company I founded in order to deal with the unsustainable amount of power that is being required every year for modern AI. So far I have made 3 designs, each better than the last, all of which have been validated on real FPGA hardware.
 
-> **Note on FPGA validation**: The 128-core count is the architectural design target for ASIC. FPGA validation runs a subset — N2 fits 16 cores on the VU47P (1999/3576 BRAM36K), N3 fits 8 cores (1 tile). The FPGA proves functional correctness of the core logic, NoC routing, learning engine, and spike processing — not a claim that the full 128-core design fits on a single FPGA.
+> **Note on FPGA validation**: The 128-core count is the architectural design target for ASIC. FPGA validation runs a subset: N2 fits 16 cores on the VU47P (1999/3576 BRAM36K), N3 fits 8 cores (1 tile). The FPGA proves functional correctness of the core logic, NoC routing, learning engine, and spike processing. Please note this is not a claim that the full 128-core design fits on a single FPGA.
 
-**Two ways to use it:**
+**Catalyst Cloud** (still work in progress): REST API for neuromorphic simulation. Currently in early development, if you would like access feel free to email me at henry@catalyst-neuromorphic.com and I will be able to help you get access for free.
 
-- **Catalyst Cloud** — REST API for neuromorphic simulation. No hardware required. **Currently in early development — if you'd like access, email henry@catalyst-neuromorphic.com and I'll set you up for free.**
-- **FPGA Dev Boards** — Physical hardware with the Catalyst bitstream. Deploy at the edge.
+**FPGA Dev Boards** (work in progress): Physical hardware for neuromorphic simulation.
 
 ---
 
@@ -41,15 +38,13 @@ Catalyst is a family of neuromorphic processors designed for energy-efficient sp
 | Embedded processors | 3× RV32IMF | 3× RV32IMF | **4× RV32IMC + neuro ISA** |
 | **Parity target** | **Loihi 1** | **Loihi 2** | **Beyond Loihi 2** |
 
-> *N1 and N2 match Loihi 1 and Loihi 2 feature sets respectively. N3 adds capabilities that no current neuromorphic chip offers: hybrid ANN/SNN, hardware virtualization, per-tile learning accelerators, and 4-level memory hierarchy.*
+> *N1 and N2 match Loihi 1 and Loihi 2 feature sets respectively. N3 adds capabilities that no other neuromorphic chip offers: hybrid ANN/SNN, hardware virtualization, per-tile learning accelerators, and 4-level memory hierarchy.*
 
 ---
 
 ## Catalyst N3 — Third Generation
 
-**128-core neuromorphic SoC with hybrid ANN/SNN computing, hardware virtualization, and on-chip continual learning.**
-
-N3 introduces 68 architectural features — 20 beyond what N2 offered. Key differentiators over Intel Loihi 2:
+N3 introduces many new architectural features coming in at a count of 20 beyond what N2 offers, some key differentiators over Intel Loihi 2 are:
 
 | Feature | Catalyst N3 | Loihi 2 |
 |---|---|---|
@@ -64,9 +59,9 @@ N3 introduces 68 architectural features — 20 beyond what N2 offered. Key diffe
 | **FACTOR compression** | Low-rank SVD synapse format, 2–8× savings | Not available |
 | **Winner-Take-All** | Hardware two-pass, configurable groups/k | Not available |
 
-**FPGA validation**: 8-core tile on AWS F2, 19/19 tests passing, 14.5K timesteps/sec, 83.3 MHz.
+FPGA validation: 8-core tile on AWS F2, 19/19 tests passing, 14.5K timesteps/sec, 83.3 MHz.
 
-**N3 paper and full benchmark suite — coming soon.**
+N3 benchmarks and paper coming soon.
 
 ---
 
@@ -95,9 +90,7 @@ Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://gith
 | **GSC KWS** | 12 | 40→512→12 (rec, S2S) | adLIF | **88.0%** | — |
 | **DVS Gesture** | 11 | — | — | *in progress* | — |
 
-All models trained with surrogate gradient BPTT on N2 architecture, deployed to Catalyst FPGA hardware with int16 quantization.
-
-**N3 benchmarks** (with INT8 MAC hybrid, WTA, TDM, precision sweeps) — coming soon.
+All models have been trained with surrogate gradient BPTT on N2 architecture, then deployed to Catalyst FPGA hardware with int16 quantization. N3 benchmarks are coming soon.
 
 ```bash
 # Reproduce any benchmark
@@ -138,9 +131,7 @@ Full comparison against Intel Loihi 1 and Loihi 2:
 
 ## Try It Now
 
-### Catalyst Cloud API *(Early Development)*
-
-> **The cloud platform is still heavily work in progress.** If you're interested in trying the Catalyst architectures, I'd recommend emailing me at **henry@catalyst-neuromorphic.com** — I'll set you up with free access to all three generations rather than going through the billing system.
+### Catalyst Cloud API (Early Development)
 
 Neuromorphic compute as a service. Define a network, submit a job, get spikes back.
 
@@ -186,9 +177,9 @@ Physical hardware with the Catalyst bitstream. Planned for [Crowd Supply](https:
 
 ## Roadmap & Tapeout
 
-The long-term goal is to tape out Catalyst as physical silicon. The architectures are FPGA-validated and the RTL is ready — what's needed now is funding for a shuttle run. TSMC 28nm HPC+ is the current target for N3-alpha (128 cores, ~450 mm² die).
+Our long-term goal is to tape out Catalyst as physical silicon. As the architectures are FPGA validated and the RTL is ready all that would be needed now is funding for a shuttle run. TSMC 28nm HPC+ would be the target for N3 (128 cores & ~450 mm² die).
 
-**If you're interested in partnering, collaborating, or supporting the path to silicon** — whether that's funding, fab access, research collaboration, or just want to talk neuromorphic hardware — please reach out: **henry@catalyst-neuromorphic.com**
+If you are interested in partnering, collaborating, or have any other inquiries, please reach out to **henry@catalyst-neuromorphic.com**
 
 <p align="center">
   <a href="https://github.com/sponsors/Mr-wabbit">
@@ -224,7 +215,7 @@ You can also back development directly via [GitHub Sponsors](https://github.com/
 
 ## Contact
 
-I'm always happy to hear from researchers, engineers, and anyone interested in neuromorphic computing. Whether you want free cloud access, want to discuss the architecture, or have ideas for collaboration — just email me.
+I am more than open to hear from anyone with any interest in my work or in the general space of neuromorphic computing.
 
 - **Email**: henry@catalyst-neuromorphic.com
 - **Website**: [catalyst-neuromorphic.com](https://catalyst-neuromorphic.com)
@@ -232,5 +223,5 @@ I'm always happy to hear from researchers, engineers, and anyone interested in n
 
 ---
 
-*Built by one person. Three generations. <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> SDK tests. 1,011+ RTL tests. N3: 68 features, hybrid ANN/SNN, FPGA validated. Beats Loihi 2 on SSC (73.5% vs 69.8%).*
+*All of this was built by one person, all 3 generations including: <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> SDK tests, 1,011+ RTL tests, N3 with 68 features, hybrid ANN/SNN, FPGA validated, and beating Loihi 2 on SSC (73.5% vs 69.8%).*
 
