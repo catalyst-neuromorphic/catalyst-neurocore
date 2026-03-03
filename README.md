@@ -3,47 +3,68 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094) 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
 
-**Neuromorphic processor architecture — 128 cores, 131K neurons, full Loihi 2 feature parity, 90.7% SHD benchmark (beats Loihi 1).**
+**Open neuromorphic processors that rival Intel Loihi, BrainChip Akida, and SpiNNaker. Three generations of silicon, FPGA validated, cloud accessible.**
 
-> Two generations of neuromorphic silicon. Validated on real FPGA hardware. Accessible via cloud API or dedicated dev boards.
+> We design neuromorphic chips from the transistor up. Our latest benchmarks beat Loihi 2 on SSC (73.5% vs 69.8%) and match it on SHD (90.7% vs 90.9%). Papers, cloud API, and source access available.
 
 ---
 
 ## What is Catalyst?
 
-Catalyst is a neuromorphic processor family designed for energy-efficient spiking neural network inference and on-chip learning. The architecture runs hardware-accurate LIF neuron dynamics, programmable synaptic plasticity, and dendritic computation — all at a fraction of the power consumed by conventional GPUs.
+Catalyst is a family of neuromorphic processors designed for energy-efficient spiking neural network inference and on-chip learning. Three generations — each pushing what open neuromorphic hardware can do. All validated on real FPGA hardware.
 
 **Two ways to use it:**
 
-- **Catalyst Cloud** — REST API for neuromorphic simulation. No hardware, no install. Free tier available.
+- **Catalyst Cloud** — REST API for neuromorphic simulation. No hardware required. Free tier available.
 - **FPGA Dev Boards** — Physical hardware with the Catalyst bitstream. Deploy at the edge.
 
 ---
 
 ## Architecture at a Glance
 
-| Feature | Catalyst N1 | Catalyst N2 |
-|---|---|---|
-| Cores | 128 | 128 |
-| Neurons/core | 1,024 (CUBA LIF) | 1,024 (programmable microcode) |
-| Total neurons | 131,072 | 131,072 |
-| Synapses/core | 131K (CSR compressed) | 131K (CSR compressed) |
-| State precision | 24-bit fixed-point | 24-bit fixed-point |
-| Dendritic compartments | Yes (tree topology) | Yes (tree topology) |
-| Spike traces | Dual (pre/post) | Dual (pre/post) |
-| Graded spikes | Yes (Loihi 2 feature) | Yes |
-| Programmable delays | 1-63 timesteps | 1-63 timesteps |
-| Learning engine | 16 registers, 14 opcodes | 16 registers, 14 opcodes |
-| STDP | Yes | Yes |
-| 3-factor reward learning | Yes | Yes |
-| Homeostatic normalization | Yes | Yes |
-| Stochastic threshold noise | Per-neuron LFSR | Per-neuron LFSR |
-| Synapse encodings | Sparse, Dense, Population | Sparse, Dense, Population + Convolutional |
-| Neuron models | CUBA LIF | CUBA, Izhikevich, Adaptive LIF, Sigma-Delta, Resonate-and-Fire |
-| Embedded processors | Triple RV32IMF RISC-V | Triple RV32IMF RISC-V |
-| **Loihi parity** | **Loihi 1** | **Loihi 2** |
+| Feature | Catalyst N1 | Catalyst N2 | **Catalyst N3** |
+|---|---|---|---|
+| Cores | 128 | 128 | **128 (16 tiles)** |
+| Neurons/core | 1,024 (CUBA LIF) | 1,024 (programmable) | **4,096 (24-bit) / 8,192 (8-bit)** |
+| Total neurons | 131,072 | 131,072 | **524K–1M** |
+| Neuron models | CUBA LIF | 5 (programmable) | **7+ (programmable + 1 custom)** |
+| Weight precision | 8-bit fixed | 1–16-bit variable | **1–16-bit variable** |
+| Learning engine | 14-opcode ISA | 16-register microcode | **16 × 28-opcode (per-tile)** |
+| Spike traces | 2 | 5 | **6** |
+| Memory hierarchy | 1 level | 1 level | **4 levels (L1→L4)** |
+| ANN mode | — | — | **INT8 MAC** |
+| Virtualization | — | — | **NeurOS (680+ networks)** |
+| Spike compression | — | — | **DELTA/BURST/ADAPTIVE** |
+| Metaplasticity | — | — | **Hardware (3-bit consolidation)** |
+| Embedded processors | 3× RV32IMF | 3× RV32IMF | **4× RV32IMC + neuro ISA** |
+| **Parity target** | **Loihi 1** | **Loihi 2** | **Beyond Loihi 2** |
 
-> *Catalyst matches or exceeds all Loihi functional features (neuron models, learning engine, compartments, graded spikes, delays, noise, synapse formats). The "parity" designation refers to architectural feature equivalence, not identical physical specifications.*
+> *N1 and N2 match Loihi 1 and Loihi 2 feature sets respectively. N3 adds capabilities that no current neuromorphic chip offers: hybrid ANN/SNN, hardware virtualization, per-tile learning accelerators, and 4-level memory hierarchy.*
+
+---
+
+## Catalyst N3 — Third Generation
+
+**128-core neuromorphic SoC with hybrid ANN/SNN computing, hardware virtualization, and on-chip continual learning.**
+
+N3 introduces 68 architectural features — 20 beyond what N2 offered. Key differentiators over Intel Loihi 2:
+
+| Feature | Catalyst N3 | Loihi 2 |
+|---|---|---|
+| **ANN INT8 MAC mode** | Per-core hybrid ANN/SNN toggle | Not available |
+| **4-level memory** | L1→L2→L3(HBM)→L4(CXL), 500M+ synapses | 2-level on-chip |
+| **Hardware virtualization** | NeurOS: 680+ virtual networks, TDM context switching | Not available |
+| **Per-tile learning** | 16 independent accelerators (28-opcode ISA, 80 registers) | 1 global engine |
+| **Hardware metaplasticity** | 3-bit consolidation per synapse | Not available |
+| **Parameter groups** | 32/core → 4× neuron density | Not available |
+| **Spike compression** | DELTA/BURST/ADAPTIVE encoding | Not available |
+| **Homeostatic plasticity** | Hardware firing rate tracking + synaptic scaling | Not available |
+| **FACTOR compression** | Low-rank SVD synapse format, 2–8× savings | Not available |
+| **Winner-Take-All** | Hardware two-pass, configurable groups/k | Not available |
+
+**FPGA validation**: 8-core tile on AWS F2, 19/19 tests passing, 14.5K timesteps/sec, 83.3 MHz.
+
+**N3 paper and full benchmark suite — coming soon.**
 
 ---
 
@@ -66,7 +87,7 @@ Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://gith
 | Benchmark | Classes | Architecture | Neuron | Float Acc | vs Loihi |
 |---|---|---|---|---|---|
 | **SHD** | 20 | 700→1024→20 (rec) | adLIF | **90.7%** | Beats Loihi 1 (89.0%) |
-| **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | **72.1%** | Beats Loihi 2 (69.8%) |
+| **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | **73.5%** | Beats Loihi 2 (69.8%) |
 | **N-MNIST** | 10 | Conv2D+LIF→10 | LIF | **99.2%** | — |
 | **GSC KWS** | 12 | 40→512→12 (rec, S2S) | adLIF | **88.0%** | — |
 | **DVS Gesture** | 11 | — | — | *in progress* | — |
@@ -178,17 +199,23 @@ Back independent neuromorphic silicon development via [GitHub Sponsors](https://
 
 ## Papers
 
+> **Catalyst N3** — *coming soon*
+>
+> 128-Core Hybrid ANN/SNN Neuromorphic SoC with Hardware Virtualization and On-Chip Continual Learning
+
+> **Catalyst N2: Full Loihi 2 Feature Parity in an Open Neuromorphic Processor with Programmable Neuron Microcode and Cloud FPGA Validation**
+>
+> Henry Arthur Shulayev Barnes, University of Aberdeen
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
+
 > **Catalyst N1: A 131K-Neuron Open Neuromorphic Processor with Programmable Synaptic Plasticity and FPGA Validation**
 >
 > Henry Arthur Shulayev Barnes, University of Aberdeen
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
-> **Catalyst N2: Full Loihi 2 Feature Parity in an Open Neuromorphic Processor with Programmable Neuron Microcode and Cloud FPGA Validation**
->
-> Henry Arthur Shulayev Barnes, University of Aberdeen
-
-**[N1 Paper (Zenodo)](https://zenodo.org/records/18727094)** | **[N2 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n2.pdf)**
+**[N2 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n2.pdf)** | **[N1 Paper (Zenodo)](https://zenodo.org/records/18727094)**
 
 ---
 
@@ -200,5 +227,5 @@ Back independent neuromorphic silicon development via [GitHub Sponsors](https://
 
 ---
 
-*Built by one person. <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> tests. Loihi 2 feature parity. Beats Loihi 1 on SHD, beats Loihi 2 on SSC.*
+*Built by one person. Three generations. <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> SDK tests. 1,011+ RTL tests. N3: 68 features, hybrid ANN/SNN, FPGA validated. Beats Loihi 2 on SSC (73.5% vs 69.8%).*
 
