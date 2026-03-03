@@ -13,9 +13,11 @@
 
 Catalyst is a family of neuromorphic processors designed for energy-efficient spiking neural network inference and on-chip learning. Three generations — each pushing what open neuromorphic hardware can do. All validated on real FPGA hardware.
 
+> **Note on FPGA validation**: The 128-core count is the architectural design target for ASIC. FPGA validation runs a subset — N2 fits 16 cores on the VU47P (1999/3576 BRAM36K), N3 fits 8 cores (1 tile). The FPGA proves functional correctness of the core logic, NoC routing, learning engine, and spike processing — not a claim that the full 128-core design fits on a single FPGA.
+
 **Two ways to use it:**
 
-- **Catalyst Cloud** — REST API for neuromorphic simulation. No hardware required. Free tier available.
+- **Catalyst Cloud** — REST API for neuromorphic simulation. No hardware required. **Currently in early development — if you'd like access, email henry@catalyst-neuromorphic.com and I'll set you up for free.**
 - **FPGA Dev Boards** — Physical hardware with the Catalyst bitstream. Deploy at the edge.
 
 ---
@@ -74,7 +76,8 @@ N3 introduces 68 architectural features — 20 beyond what N2 offered. Key diffe
 |---|---|
 | SDK test suite | **<!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> tests** |
 | Feature coverage | **<!-- STAT:FEATURES_TOTAL -->155<!-- /STAT --> total** (<!-- STAT:FEATURES_FULL -->152<!-- /STAT --> FULL, <!-- STAT:FEATURES_HW_ONLY -->3<!-- /STAT --> HW_ONLY) |
-| FPGA validation | 28/28 pass (AWS F2, Xilinx VU47P, 62.5 MHz) |
+| FPGA validation (N2) | 28/28 pass (16 cores, AWS F2, Xilinx VU47P, 62.5 MHz) |
+| FPGA validation (N3) | 19/19 pass (8 cores / 1 tile, AWS F2, 83.3 MHz) |
 | RTL testbenches | 25 (98 scenarios, 0 failures) |
 | SHD benchmark | **90.7%** (adLIF) / **<!-- STAT:SHD_FLOAT -->85.9<!-- /STAT -->%** (LIF baseline) |
 
@@ -135,18 +138,16 @@ Full comparison against Intel Loihi 1 and Loihi 2:
 
 ## Try It Now
 
-### Catalyst Cloud API
+### Catalyst Cloud API *(Early Development)*
+
+> **The cloud platform is still heavily work in progress.** If you're interested in trying the Catalyst architectures, I'd recommend emailing me at **henry@catalyst-neuromorphic.com** — I'll set you up with free access to all three generations rather than going through the billing system.
 
 Neuromorphic compute as a service. Define a network, submit a job, get spikes back.
 
 ```python
 import catalyst_cloud as cc
 
-# Sign up (once)
-account = cc.Client.signup("you@lab.edu")
-print(account["api_key"])  # Save this
-
-# Create a client
+# Create a client (email henry@catalyst-neuromorphic.com for a free key)
 client = cc.Client("cn_live_...")
 
 # Define a network
@@ -175,11 +176,7 @@ print(result["result"]["firing_rates"])
 pip install catalyst-cloud
 ```
 
-- **Free tier**: 10 jobs/day, 1,024 neurons, no credit card
-- **Paid tiers**: Higher limits, priority compute, dedicated support
 - **Interactive demo**: [HuggingFace Spaces](https://huggingface.co/spaces/Catalyst-Neuromorphic/catalyst-cloud)
-
-[Cloud Pricing](https://catalyst-neuromorphic.com/cloud/pricing) | [API Docs](https://catalyst-neuromorphic.com/cloud/docs)
 
 ### FPGA Dev Boards
 
@@ -187,7 +184,11 @@ Physical hardware with the Catalyst bitstream. Planned for [Crowd Supply](https:
 
 ---
 
-## Support Development
+## Roadmap & Tapeout
+
+The long-term goal is to tape out Catalyst as physical silicon. The architectures are FPGA-validated and the RTL is ready — what's needed now is funding for a shuttle run. TSMC 28nm HPC+ is the current target for N3-alpha (128 cores, ~450 mm² die).
+
+**If you're interested in partnering, collaborating, or supporting the path to silicon** — whether that's funding, fab access, research collaboration, or just want to talk neuromorphic hardware — please reach out: **henry@catalyst-neuromorphic.com**
 
 <p align="center">
   <a href="https://github.com/sponsors/Mr-wabbit">
@@ -195,7 +196,7 @@ Physical hardware with the Catalyst bitstream. Planned for [Crowd Supply](https:
   </a>
 </p>
 
-Back independent neuromorphic silicon development via [GitHub Sponsors](https://github.com/sponsors/Mr-wabbit). Sponsors get compute credits for the Catalyst Cloud API, priority access to hardware, and early access to new features.
+You can also back development directly via [GitHub Sponsors](https://github.com/sponsors/Mr-wabbit).
 
 ---
 
@@ -222,6 +223,8 @@ Back independent neuromorphic silicon development via [GitHub Sponsors](https://
 ---
 
 ## Contact
+
+I'm always happy to hear from researchers, engineers, and anyone interested in neuromorphic computing. Whether you want free cloud access, want to discuss the architecture, or have ideas for collaboration — just email me.
 
 - **Email**: henry@catalyst-neuromorphic.com
 - **Website**: [catalyst-neuromorphic.com](https://catalyst-neuromorphic.com)
