@@ -60,7 +60,7 @@ N3 introduces many new architectural features coming in at a count of 20 beyond 
 | **FACTOR compression** | Low-rank SVD synapse format, 2–8× savings | Not available |
 | **Winner-Take-All** | Hardware two-pass, configurable groups/k | Not available |
 
-FPGA validation: 8-core tile on AWS F2, 19/19 tests passing, 14,512 timesteps/sec, 83.3 MHz. Energy efficiency: 4.04 nJ/neuron-op (3.7x improvement over N2).
+FPGA validation: 8-core tile on AWS F2, 19/19 tests passing, 14,512 timesteps/sec, 62.5 MHz. Energy efficiency: 4.04 nJ/neuron-op (3.7x improvement over N2).
 
 **Benchmarks**: SSC **76.4%** (+6.6 over Loihi 2's hardware deployment), SHD **91.0%** (matching Loihi 2's 90.9%).
 
@@ -75,8 +75,9 @@ FPGA validation: 8-core tile on AWS F2, 19/19 tests passing, 14,512 timesteps/se
 | Processor | AFI | Tests | Pass Rate | Throughput | Frequency |
 |-----------|-----|-------|-----------|------------|-----------|
 | N1 | `agfi-03e071bc88f912e77` | — | PASS | — | 62.5 MHz |
-| N2 | `agfi-0326f183a3aa95780` | 28/28 | 100% | — | 62.5 MHz |
-| N3 | `agfi-0df16698ef37c59d9` | 19/19 | 100% | 14,512 ts/sec | 83.3 MHz |
+| N2 | `agfi-0326f183a3aa95780` | 28/28 | 100% | 8,690 ts/sec | 62.5 MHz |
+| N3 | `agfi-0df16698ef37c59d9` | 19/19 | 100% | 14,512 ts/sec | 62.5 MHz |
+| N4-Edge | `agfi-0e706213dcd11d40e` | 126/126 | 100% | 15,668 ts/sec | 62.5 MHz |
 
 ### Kria K26 Edge Characterisation (xczu5ev-sfvc784-2-i, 100 MHz target)
 
@@ -84,11 +85,12 @@ Each processor synthesised as a 2-core edge variant with AXI-Lite PS interface o
 
 | Processor | LUTs | LUT% | FFs | FF% | BRAM | DSP | WNS | Fmax | Power |
 |-----------|------|------|-----|-----|------|-----|-----|------|-------|
-| **N1** | 19,903 | 17.0% | 30,847 | 13.2% | 52.5 (36.5%) | 14 (1.1%) | +0.008ns | 100 MHz | 0.642W |
-| **N2** | 26,155 | 22.3% | 38,666 | 16.5% | 52.5 (36.5%) | 16 (1.3%) | -0.168ns | ~97 MHz | 0.688W |
-| **N3** | 51,381 | 43.9% | 80,395 | 34.3% | 24 (16.7%) | 20 (1.6%) | -7.075ns | ~58.5 MHz | 0.867W |
+| **N1** | 20,109 | 17.2% | 30,847 | 13.2% | 52.5 (36.5%) | 14 (1.1%) | +0.008ns | 100 MHz | 0.642W |
+| **N2** | 26,431 | 22.6% | 38,666 | 16.5% | 52.5 (36.5%) | 16 (1.3%) | -0.168ns | ~97 MHz | 0.688W |
+| **N3** | 53,420 | 45.6% | 80,395 | 34.3% | 24 (16.7%) | 20 (1.6%) | -7.075ns | ~58.5 MHz | 0.867W |
+| **N4-Edge** | 3,083 | 2.6% | — | — | 0 (0%) | 0 (0%) | +3.301ns | 100 MHz | 0.378W |
 
-N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflects its richer feature set (68 features, hardware ECC, asynchronous NoC) — pipeline register insertion is expected to close this to 80-90 MHz.
+N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflects its richer feature set (68 features, hardware ECC, asynchronous NoC) — pipeline register insertion is expected to close this to 80-90 MHz. N4-Edge uses zero BRAM and zero DSP — its Spike Tensor Core operates on binary spikes using conditional-add logic, leaving all dedicated blocks free for sensor interfaces.
 
 ### ASIC Projections (SKY130 130nm Synthesis)
 
@@ -108,7 +110,7 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 | N3 simulation tests | **1,011+** |
 | Feature coverage | **<!-- STAT:FEATURES_TOTAL -->155<!-- /STAT --> total** (<!-- STAT:FEATURES_FULL -->152<!-- /STAT --> FULL, <!-- STAT:FEATURES_HW_ONLY -->3<!-- /STAT --> HW_ONLY) |
 | RTL testbenches | 25 (98 scenarios, 0 failures) |
-| Patents filed | N1 (2602902.6), N2 (2603866.1), N3 (filed 2 Mar 2026) |
+| Patents filed | N1 (2602902.6), N2 (2603866.1), N3 (filed 2 Mar 2026), N4 (filed 5 Mar 2026) |
 
 ---
 
@@ -143,10 +145,23 @@ All N3 models use adaptive LIF neurons with surrogate gradient BPTT and cosine L
 | Benchmark | Classes | Architecture | Neuron | Float Acc | vs Competition |
 |---|---|---|---|---|---|
 | **SHD** | 20 | 700→1024→20 (rec) | LIF | **90.6%** | Basic LIF baseline |
+| **N-MNIST** | 10 | Conv2D+LIF→10 | LIF | **99.2%** | — |
+| **DVS Gesture** | 11 | Deep conv+rec | LIF | **69.7%** | — |
+| **GSC-12** | 12 | 40→512→12 (rec, S2S) | LIF | **86.4%** | — |
 
 N1 uses only basic LIF neurons (no adaptation) — the accuracy demonstrates that even the simplest spiking neuron model achieves competitive performance at sufficient scale.
 
 All models trained with surrogate gradient BPTT and deployed to Catalyst FPGA hardware with int16 quantization.
+
+### Quantised Inference (int16 fixed-point)
+
+| Benchmark | Float32 | Int16 | Degradation |
+|-----------|---------|-------|-------------|
+| **SHD** | 91.0% | **90.8%** | -0.2% |
+| **SSC** | 76.4% | **76.4%** | 0.0% |
+| **N-MNIST** | 99.1% | **99.2%** | +0.1% |
+
+Quantised models match hardware representation (int16 weights, 12-bit fixed-point membrane decay) with zero or near-zero accuracy loss.
 
 ```bash
 # Reproduce any benchmark
@@ -281,5 +296,5 @@ I am more than open to hear from anyone with any interest in my work or in the g
 
 ---
 
-*All of this was built by one person — 3 processor generations, <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> SDK tests, 1,011+ N3 RTL tests, 68 hardware features, hybrid ANN/SNN, all FPGA validated on AWS F2 and Kria K26, 3 patents filed, 3 papers published, and benchmark results competitive with Intel Loihi 2.*
+*All of this was built by one person — 3 processor generations, <!-- STAT:TEST_COUNT -->3,091<!-- /STAT --> SDK tests, 1,011+ N3 RTL tests, 68 hardware features, hybrid ANN/SNN, all FPGA validated on AWS F2 and Kria K26, 4 patents filed, 3 papers published, and benchmark results competitive with Intel Loihi 2.*
 
