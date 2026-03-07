@@ -4,7 +4,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg?v=2)](https://zenodo.org/records/18727094)
 
-We design neuromorphic chips that beat the best, but at a fraction of the cost. N3 achieves state-of-the-art results on SSC (76.4% vs Loihi 2's 69.8%) and SHD (91.0% vs Loihi 2's 90.9%), with 3.7x better energy efficiency per neuron-op than N2 on identical FPGA hardware. Below you may find links to our papers, cloud API (still work in progress), and other details.
+We design neuromorphic chips that beat the best, but at a fraction of the cost. N3 achieves 76.4% on SSC (vs Loihi 2's 69.8%) and 91.0% on SHD (matching Loihi 2's 90.9%), with 3.7x better energy efficiency per neuron-op than N2 on identical FPGA hardware. Below you may find links to our papers, cloud API (still work in progress), and other details.
 
 ---
 
@@ -62,7 +62,7 @@ N3 introduces many new architectural features coming in at a count of 20 beyond 
 
 FPGA validation: 8-core tile on AWS F2, 19/19 tests passing, 14,512 timesteps/sec, 83.3 MHz. Energy efficiency: 4.04 nJ/neuron-op (3.7x improvement over N2).
 
-**Benchmarks**: SSC **76.4%** (new SOTA, +6.6 over Loihi 2), SHD **91.0%** (#1, beating Loihi 2's 90.9%).
+**Benchmarks**: SSC **76.4%** (+6.6 over Loihi 2's hardware deployment), SHD **91.0%** (matching Loihi 2's 90.9%).
 
 [![N3 Paper](https://zenodo.org/badge/DOI/10.5281/zenodo.18881283.svg)](https://zenodo.org/records/18881283)
 
@@ -118,15 +118,15 @@ Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://gith
 
 ### N3 (Latest)
 
-| Benchmark | Classes | Architecture | Neuron | Float Acc | Quantised (int16) | vs Competition |
-|---|---|---|---|---|---|---|
-| **SHD** | 20 | 700→1536→20 (rec) | adLIF | **91.0%** | **90.8%** | Beats Loihi 2 (90.9%) |
-| **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | **76.4%** | **76.4%** | Beats Loihi 2 (69.8%) |
-| **N-MNIST** | 10 | Conv2D+LIF→10 | LIF | **99.2%** | **99.2%** | Near ceiling |
-| **GSC-12** | 12 | 40→512→12 (rec, S2S) | adLIF | **88.4%** | ~88.4% | — |
-| **DVS Gesture** | 11 | Deep conv+rec | adLIF | **89.4%** | — | — |
+| Benchmark | Classes | Architecture | Neuron | Float Acc | Params |
+|---|---|---|---|---|---|
+| **SHD** | 20 | 700→1536→20 (rec) | adLIF | **91.0%** | 3.47M |
+| **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | **76.4%** | 2.31M |
+| **N-MNIST** | 10 | Conv2D+LIF→10 | LIF | **99.1%** | 691K |
+| **GSC-12** | 12 | 40→512→12 (rec, S2S) | adLIF | **88.0%** | 291K |
+| **DVS Gesture** | 11 | Deep conv+rec | adLIF | **89.0%** | ~1.2M |
 
-All N3 models use adaptive LIF neurons with surrogate gradient BPTT and cosine LR scheduling. Quantised accuracy is measured via int16 round-trip quantisation simulating hardware weight registers — degradation is negligible (<0.3pp).
+All N3 models use adaptive LIF neurons with surrogate gradient BPTT and cosine LR scheduling.
 
 ### N2
 
@@ -142,7 +142,7 @@ All N3 models use adaptive LIF neurons with surrogate gradient BPTT and cosine L
 
 | Benchmark | Classes | Architecture | Neuron | Float Acc | vs Competition |
 |---|---|---|---|---|---|
-| **SHD** | 20 | 700→1024→20 (rec) | LIF | **89.3%** | Basic LIF baseline |
+| **SHD** | 20 | 700→1024→20 (rec) | LIF | **90.6%** | Basic LIF baseline |
 
 N1 uses only basic LIF neurons (no adaptation) — the accuracy demonstrates that even the simplest spiking neuron model achieves competitive performance at sufficient scale.
 
