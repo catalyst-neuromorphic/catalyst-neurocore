@@ -60,7 +60,7 @@ N3 introduces many new architectural features coming in at a count of 20 beyond 
 | **FACTOR compression** | Low-rank SVD synapse format, 2–8× savings | Not available |
 | **Winner-Take-All** | Hardware two-pass, configurable groups/k | Not available |
 
-FPGA validation: 8-core tile on AWS F2, 19/19 tests passing, 14,512 timesteps/sec, 62.5 MHz. Energy efficiency: 4.04 nJ/neuron-op (3.7x improvement over N2).
+FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz, 1.923 W, 262,317 LUTs. Energy efficiency: 4.04 nJ/neuron-op (3.7x improvement over N2).
 
 **Benchmarks**: SSC **76.4%** (+6.6 over Loihi 2's hardware deployment), SHD **91.0%** (matching Loihi 2's 90.9%).
 
@@ -72,11 +72,11 @@ FPGA validation: 8-core tile on AWS F2, 19/19 tests passing, 14,512 timesteps/se
 
 ### AWS F2 Cloud FPGA (Xilinx VU47P)
 
-| Processor | AFI | Tests | Pass Rate | Throughput | Frequency |
-|-----------|-----|-------|-----------|------------|-----------|
-| N1 | `agfi-03e071bc88f912e77` | — | PASS | — | 62.5 MHz |
-| N2 | `agfi-0326f183a3aa95780` | 28/28 | 100% | 8,690 ts/sec | 62.5 MHz |
-| N3 | `agfi-0df16698ef37c59d9` | 19/19 | 100% | 14,512 ts/sec | 62.5 MHz |
+| Processor | AFI | Throughput | Frequency | Power | LUTs |
+|-----------|-----|------------|-----------|-------|------|
+| N1 | `agfi-03e071bc88f912e77` | — | 62.5 MHz | 1.847 W | 189,970 |
+| N2 | `agfi-0326f183a3aa95780` | 8,690 ts/sec | 62.5 MHz | 1.913 W | 228,393 |
+| N3 | `agfi-0df16698ef37c59d9` | 14,512 ts/sec | 62.5 MHz | 1.923 W | 262,317 |
 
 ### Kria K26 Edge Characterisation (xczu5ev-sfvc784-2-i, 100 MHz target)
 
