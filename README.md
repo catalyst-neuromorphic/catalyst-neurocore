@@ -21,10 +21,6 @@ The Catalyst N1 neuromorphic processor is fully open source under the Apache 2.0
 
 ---
 
-We design neuromorphic chips that beat the best, but at a fraction of the cost. N3 achieves 76.4% on SSC (vs Loihi 2's 69.8%) and 91.0% on SHD (matching Loihi 2's 90.9%), with 3.7x better energy efficiency per neuron-op than N2 on identical FPGA hardware. Below you may find links to our papers, cloud API (still work in progress), and other details.
-
----
-
 ## What is Catalyst?
 
 Catalyst is a company I founded in order to deal with the unsustainable amount of power that is being required every year for modern AI. So far I have made 3 designs, each better than the last, all of which have been validated on real FPGA hardware.
@@ -309,7 +305,4 @@ I am more than open to hear from anyone with any interest in my work or in the g
 - **Website**: [catalyst-neuromorphic.com](https://catalyst-neuromorphic.com)
 - **Cloud API**: [catalyst-neuromorphic.com/cloud](https://catalyst-neuromorphic.com/cloud)
 
----
-
-*All of this was built by one person — 4 processor generations, FPGA validated on AWS F2 and Kria K26, benchmark accuracy exceeding Intel Loihi 2 on temporal classification, ASIC projections at 28 nm targeting 100-300 mW, and a production Cloud API.*
 
