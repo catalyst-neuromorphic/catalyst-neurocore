@@ -50,13 +50,13 @@ Catalyst is a company I founded in order to deal with the unsustainable amount o
 | Spike compression | — | — | **DELTA/BURST/ADAPTIVE** |
 | Metaplasticity | — | — | **Hardware (3-bit consolidation)** |
 | Embedded processors | 3× RV32IMF | 3× RV32IMF | **4× RV32IMC + neuro ISA** |
-| **Parity target** | **Loihi 1** | **Loihi 2** | **Beyond Loihi 2** |
+| **Parity target** | **Loihi 1** | **Loihi 2** | **Loihi 2 + extensions** |
 
-> *N1 and N2 match Loihi 1 and Loihi 2 feature sets respectively. N3 adds capabilities that no other neuromorphic chip offers: hybrid ANN/SNN, hardware virtualization, per-tile learning accelerators, and 4-level memory hierarchy.*
+> *N1 and N2 match Loihi 1 and Loihi 2 feature sets respectively. N3 extends the architecture with hybrid ANN/SNN mode, hardware virtualization, per-tile learning accelerators, and a 4-level memory hierarchy.*
 
 ---
 
-## Catalyst N3 — Third Generation
+## Catalyst N3: Third Generation
 
 N3 introduces many new architectural features coming in at a count of 20 beyond what N2 offers, some key differentiators over Intel Loihi 2 are:
 
@@ -93,7 +93,7 @@ FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz, 1.923 W,
 
 ### Kria K26 Edge Characterisation (xczu5ev-sfvc784-2-i, 100 MHz target)
 
-Each processor synthesised as a 2-core edge variant with AXI-Lite PS interface on the Xilinx Kria K26 SOM — the same Zynq UltraScale+ fabric family used in edge deployment targets.
+Each processor synthesised as a 2-core edge variant with AXI-Lite PS interface on the Xilinx Kria K26 SOM, the same Zynq UltraScale+ fabric family used in edge deployment targets.
 
 | Processor | LUTs | LUT% | FFs | FF% | BRAM | DSP | WNS | Fmax | Power |
 |-----------|------|------|-----|-----|------|-----|-----|------|-------|
@@ -101,7 +101,7 @@ Each processor synthesised as a 2-core edge variant with AXI-Lite PS interface o
 | **N2** | 26,431 | 22.6% | 38,666 | 16.5% | 52.5 (36.5%) | 16 (1.3%) | -0.168ns | ~97 MHz | 0.688W |
 | **N3** | 53,420 | 45.6% | 80,395 | 34.3% | 24 (16.7%) | 20 (1.6%) | -7.075ns | ~58.5 MHz | 0.867W |
 
-N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflects its richer feature set (68 features, hardware ECC, asynchronous NoC) — pipeline register insertion is expected to close this to 80-90 MHz.
+N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflects its richer feature set (68 features, hardware ECC, asynchronous NoC); pipeline register insertion is expected to close this to 80-90 MHz.
 
 ### ASIC Projections (SKY130 130nm Synthesis)
 
@@ -120,14 +120,13 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 | FPGA clock | **62.5 MHz** (N1, N2), **83.3 MHz** (N3) |
 | FPGA power | **1.847 W** (N1), **1.913 W** (N2), **1.923 W** (N3) |
 | ASIC projection (28 nm) | **9.3 mm², 19-38 mW** (N2) |
-| Feature coverage | **<!-- STAT:FEATURES_TOTAL -->155<!-- /STAT --> total** (<!-- STAT:FEATURES_FULL -->152<!-- /STAT --> FULL, <!-- STAT:FEATURES_HW_ONLY -->3<!-- /STAT --> HW_ONLY) |
 | Kria K26 LUT (N4-Edge) | **3,083 (2.6%)** at 0.378 W |
 
 ---
 
 ## Benchmarks
 
-Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://github.com/catalyst-neuromorphic/catalyst-benchmarks)** — clone, train, deploy, reproduce.
+Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://github.com/catalyst-neuromorphic/catalyst-benchmarks)**. Clone, train, deploy, reproduce.
 
 ### N3 (Latest)
 
@@ -160,7 +159,7 @@ All N3 models use adaptive LIF neurons with surrogate gradient BPTT and cosine L
 | **DVS Gesture** | 11 | Deep conv+rec | LIF | **69.7%** | — |
 | **GSC-12** | 12 | 40→512→12 (rec, S2S) | LIF | **86.4%** | — |
 
-N1 uses only basic LIF neurons (no adaptation) — the accuracy demonstrates that even the simplest spiking neuron model achieves competitive performance at sufficient scale.
+N1 uses only basic LIF neurons (no adaptation). The accuracy demonstrates that even the simplest spiking neuron model achieves competitive performance at sufficient scale.
 
 All models trained with surrogate gradient BPTT and deployed to Catalyst FPGA hardware with int16 quantization.
 
@@ -193,7 +192,7 @@ python shd/train.py --neuron adlif --hidden 1536 --epochs 200 --device cuda:0 --
 
 ## Feature Parity Scorecard (N2)
 
-N2 matches every documented Loihi 2 feature. N3 goes beyond with 20 additional capabilities (see above).
+N2 targets Loihi 2 feature parity. Three capabilities requiring physical multi-chip I/O are not applicable to FPGA development boards. N3 adds 20 additional capabilities (see above).
 
 | Category | Loihi 1 | Loihi 2 | Catalyst |
 |---|---|---|---|
