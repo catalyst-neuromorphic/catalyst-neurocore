@@ -120,7 +120,7 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 | FPGA clock | **62.5 MHz** (N1, N2), **83.3 MHz** (N3) |
 | FPGA power | **1.847 W** (N1), **1.913 W** (N2), **1.923 W** (N3) |
 | ASIC projection (28 nm) | **9.3 mm², 19-38 mW** (N2) |
-| Kria K26 LUT (N4-Edge) | **3,083 (2.6%)** at 0.378 W |
+| Kria K26 LUT (edge config) | **3,083 (2.6%)** at 0.378 W |
 
 ---
 
