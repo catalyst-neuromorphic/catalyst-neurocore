@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18881283.svg)](https://zenodo.org/records/18881283)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18728256-blue)](https://zenodo.org/records/18728256)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
 ## N1 and N2 are open source
@@ -129,10 +129,10 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 
 | Metric | Value |
 |---|---|
-| FPGA clock | **62.5 MHz** (N1, N2), **83.3 MHz** (N3) |
-| FPGA power | **1.847 W** (N1), **1.913 W** (N2), **1.923 W** (N3) |
+| FPGA clock | **62.5 MHz** (all generations) |
+| N4 FPGA tests | **126/126** at 14,983 ts/sec |
+| N4-Edge K26 | **2.59% LUT**, 0.378 W, 100 MHz timing met |
 | ASIC projection (28 nm) | **9.3 mm², 19-38 mW** (N2) |
-| Kria K26 LUT (edge config) | **3,083 (2.6%)** at 0.378 W |
 
 ---
 
@@ -140,7 +140,19 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 
 Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://github.com/catalyst-neuromorphic/catalyst-benchmarks)**. Clone, train, deploy, reproduce.
 
-### N3 (Latest)
+### N4 (Latest)
+
+| Benchmark | Classes | Float Acc | Quantised (int16) | vs Loihi 2 | SOTA |
+|---|---|---|---|---|---|
+| **SHD** | 20 | **91.0%** | 90.8% (-0.2%) | 90.9% | 96.41% |
+| **SSC** | 35 | **76.4%** | 76.4% (0.0%) | 69.8% | 85.98% |
+| **N-MNIST** | 10 | **99.2%** | — | — | ~99.7% |
+| **DVS Gesture** | 11 | **89.4%** | — | — | 99.01% |
+| **GSC-12** | 12 | **88.0%** | — | — | 97.08% |
+
+N4 matches Loihi 2 on SHD and exceeds it on SSC by 6.6 points. Quantised inference shows 0.0-0.2% degradation, confirming hardware deployment readiness. The gap to software SOTA reflects training methodology (learnable delays, architecture search), not hardware limitation.
+
+### N3
 
 | Benchmark | Classes | Architecture | Neuron | Float Acc | Params |
 |---|---|---|---|---|---|
@@ -149,8 +161,6 @@ Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://gith
 | **N-MNIST** | 10 | Conv2D+LIF→10 | LIF | **99.1%** | 691K |
 | **GSC-12** | 12 | 40→512→12 (rec, S2S) | adLIF | **88.0%** | 291K |
 | **DVS Gesture** | 11 | Deep conv+rec | adLIF | **89.0%** | ~1.2M |
-
-All N3 models use adaptive LIF neurons with surrogate gradient BPTT and cosine LR scheduling.
 
 ### N2
 
@@ -248,7 +258,7 @@ For partnerships, licensing, or collaboration: **henry@catalyst-neuromorphic.com
 >
 > Henry Arthur Shulayev Barnes, University of Aberdeen
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18728256-blue)](https://zenodo.org/records/18728256)
 
 > **Catalyst N1: A 131K-Neuron Open Neuromorphic Processor with Programmable Synaptic Plasticity and FPGA Validation**
 >
