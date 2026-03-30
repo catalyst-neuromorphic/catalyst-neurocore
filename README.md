@@ -5,20 +5,13 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
-## N1 is now open source
+## N1 and N2 are open source
 
-The Catalyst N1 neuromorphic processor is fully open source under the Apache 2.0 license. 128 cores, 131,072 neurons, 14-opcode microcode learning engine, dual-network NoC, triple RV32IMF cluster, FPGA-validated on AWS F2 at 62.5 MHz. Full RTL, testbenches, SDK, and FPGA build scripts included.
+Both the N1 and N2 neuromorphic processors are fully open source under the Apache 2.0 license. Full RTL, testbenches, SDK, and FPGA build scripts included.
 
-**[github.com/catalyst-neuromorphic/catalyst-n1](https://github.com/catalyst-neuromorphic/catalyst-n1)**
+**[catalyst-n1](https://github.com/catalyst-neuromorphic/catalyst-n1)** — 128 cores, 131K neurons, Loihi 1 parity. 14-opcode learning ISA, FPGA-validated on AWS F2 at 62.5 MHz.
 
-| | |
-|---|---|
-| Architecture | 128 cores, 1,024 CUBA LIF neurons/core, 131K synapses/core |
-| Learning | 14-opcode microcode ISA, STDP, 3-factor reward-modulated, eligibility traces |
-| Interconnect | Barrier mesh + async packet-routed NoC, multi-chip serial links |
-| Embedded compute | Triple RV32IMF RISC-V cluster |
-| FPGA | AWS F2 (VU47P) at 62.5 MHz, Kria K26 (ZU5EV) at 100 MHz |
-| Parity target | Intel Loihi 1 |
+**[catalyst-n2](https://github.com/catalyst-neuromorphic/catalyst-n2)** — 128 cores, 131K neurons, full Loihi 2 feature parity. 5 neuron models, 16-opcode programmable microcode, variable-precision weights (1-16 bit), graded spikes.
 
 ---
 
@@ -36,24 +29,43 @@ Catalyst is a company I founded in order to deal with the unsustainable amount o
 
 ## Architecture at a Glance
 
-| Feature | Catalyst N1 | Catalyst N2 | **Catalyst N3** |
-|---|---|---|---|
-| Cores | 128 | 128 | **128 (16 tiles)** |
-| Neurons/core | 1,024 (CUBA LIF) | 1,024 (programmable) | **4,096 (24-bit) / 8,192 (8-bit)** |
-| Total neurons | 131,072 | 131,072 | **524K–1M** |
-| Neuron models | CUBA LIF | 5 (programmable) | **7+ (programmable + 1 custom)** |
-| Weight precision | 8-bit fixed | 1–16-bit variable | **1–16-bit variable** |
-| Learning engine | 14-opcode ISA | 16-register microcode | **16 × 28-opcode (per-tile)** |
-| Spike traces | 2 | 5 | **6** |
-| Memory hierarchy | 1 level | 1 level | **4 levels (L1→L4)** |
-| ANN mode | — | — | **INT8 MAC** |
-| Virtualization | — | — | **NeurOS (680+ networks)** |
-| Spike compression | — | — | **DELTA/BURST/ADAPTIVE** |
-| Metaplasticity | — | — | **Hardware (3-bit consolidation)** |
-| Embedded processors | 3× RV32IMF | 3× RV32IMF | **4× RV32IMC + neuro ISA** |
-| **Parity target** | **Loihi 1** | **Loihi 2** | **Loihi 2 + extensions** |
+| Feature | N1 | N2 | N3 | **N4** |
+|---|---|---|---|---|
+| Cores | 128 | 128 | 128 (16 tiles) | **512 (dual chiplet)** |
+| Physical neurons | 131K | 131K | 524K-1M | **4.19M** |
+| Virtual neurons | — | — | 4.2M (TDM) | **134M (32-ctx TDM)** |
+| Neuron models | 1 (CUBA LIF) | 5 | 7+ | **5 + LTC + programmable 32-opcode** |
+| Synapse formats | 3 | 4 | 4 | **8 (inc. KAN B-spline)** |
+| Learning engine | 14-opcode | 16-opcode | 28-opcode per-tile | **32-opcode, 8-rule, 8 threads** |
+| Memory | 1 level | 1 level | 4 levels | **256 KB L1 + 2 MB L2 + 640 MB S3RAM + 48 GB HBM3E** |
+| Attention | — | — | — | **8-head + KV cache** |
+| Spike Tensor Core | — | — | — | **16×16, 256 ops/cycle** |
+| Security | — | — | — | **AES-256, Kyber, SRAM PUF** |
+| Embedded processors | 3× RV32IMF | 3× RV32IMF | 4× RV32IMC | **8× RV64GC + 14 custom ops** |
+| Neuroscience | — | — | Metaplasticity | **HDC, Hopfield, gap junctions, glial, sleep, neurogenesis** |
+| FPGA validated | 96/96 | 28/28 | 19/19 | **126/126** |
+| Open source | Apache 2.0 | Apache 2.0 | — | — |
 
-> *N1 and N2 match Loihi 1 and Loihi 2 feature sets respectively. N3 extends the architecture with hybrid ANN/SNN mode, hardware virtualization, per-tile learning accelerators, and a 4-level memory hierarchy.*
+---
+
+## Catalyst N4: Fourth Generation
+
+512-core dual-chiplet architecture with 4.19M physical neurons expandable to 134M virtual via 32-context TDM. Introduces the Spike Tensor Core (16x16 conditional-add at 256 ops/cycle), 8-head spiking attention with KV cache, hardware backpropagation, and a suite of neuroscience primitives (hyperdimensional computing, Hopfield associative memory, gap junctions, glial cells, oscillators, sleep consolidation, neurogenesis).
+
+| | |
+|---|---|
+| Cores | 512 (2 NCCs x 32 tiles x 8 cores) |
+| Neurons | 4.19M physical, 134M virtual (TDM) |
+| Synapse formats | 8 (Full, Inference, Compact, Factor, Dual-Weight, Block-Sparse, Delta, KAN) |
+| Learning | 32-opcode ISA, 8 rules, 8 threads, 256 registers, hardware backprop |
+| Memory | 256 KB L1 + 64 KB shadow + 2 MB L2 + 640 MB S3RAM + 48 GB HBM3E |
+| Security | AES-256-GCM, CRYSTALS-Kyber, SRAM PUF, lockstep, 14-step secure boot |
+| Embedded | 8x RV64GC with 14 custom neuromorphic opcodes |
+| FPGA | 126/126 tests, 14,983 ts/sec at 62.5 MHz (AWS F2) |
+| Edge | N4-Edge on Kria K26: 2.59% LUT, 0.378 W, 100 MHz timing met |
+| Patent | UK filing, 69 claims |
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
 
 ---
 
@@ -86,11 +98,13 @@ FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz, 1.923 W,
 
 ### AWS F2 Cloud FPGA (Xilinx VU47P)
 
-| Processor | AFI | Throughput | Frequency | Power | LUTs |
-|-----------|-----|------------|-----------|-------|------|
-| N1 | `agfi-03e071bc88f912e77` | — | 62.5 MHz | 1.847 W | 189,970 |
-| N2 | `agfi-0326f183a3aa95780` | 8,690 ts/sec | 62.5 MHz | 1.913 W | 228,393 |
-| N3 | `agfi-0df16698ef37c59d9` | 14,512 ts/sec | 62.5 MHz | 1.923 W | 262,317 |
+| Processor | AFI | Tests | Throughput | Frequency | Power | LUTs |
+|-----------|-----|-------|------------|-----------|-------|------|
+| N4 | `agfi-0e19b3c801c4ba0ff` | 126/126 | 14,983 ts/sec | 62.5 MHz | — | — |
+| N4-Edge | `agfi-0e706213dcd11d40e` | 126/126 | 15,668 ts/sec | 62.5 MHz | — | — |
+| N3 | `agfi-0df16698ef37c59d9` | 19/19 | 14,512 ts/sec | 62.5 MHz | 1.923 W | 262,317 |
+| N2 | `agfi-0326f183a3aa95780` | 28/28 | 8,690 ts/sec | 62.5 MHz | 1.913 W | 228,393 |
+| N1 | `agfi-03e071bc88f912e77` | 96/96 | — | 62.5 MHz | 1.847 W | 189,970 |
 
 ### Kria K26 Edge Characterisation (xczu5ev-sfvc784-2-i, 100 MHz target)
 
@@ -98,6 +112,7 @@ Each processor synthesised as a 2-core edge variant with AXI-Lite PS interface o
 
 | Processor | LUTs | LUT% | FFs | FF% | BRAM | DSP | WNS | Fmax | Power |
 |-----------|------|------|-----|-----|------|-----|-----|------|-------|
+| **N4-Edge** | 3,036 | 2.59% | 6,496 | 2.77% | 0 | 0 | +3.301ns | 100 MHz | 0.378W |
 | **N1** | 20,109 | 17.2% | 30,847 | 13.2% | 52.5 (36.5%) | 14 (1.1%) | +0.008ns | 100 MHz | 0.642W |
 | **N2** | 26,431 | 22.6% | 38,666 | 16.5% | 52.5 (36.5%) | 16 (1.3%) | -0.168ns | ~97 MHz | 0.688W |
 | **N3** | 53,420 | 45.6% | 80,395 | 34.3% | 24 (16.7%) | 20 (1.6%) | -7.075ns | ~58.5 MHz | 0.867W |
@@ -257,11 +272,11 @@ Physical hardware with the Catalyst bitstream. Planned for [Crowd Supply](https:
 
 ---
 
-## Roadmap & Tapeout
+## Roadmap
 
-Our long-term goal is to tape out Catalyst as physical silicon. As the architectures are FPGA validated and the RTL is ready all that would be needed now is funding for a shuttle run. TSMC 28nm HPC+ would be the target for N3 (128 cores & ~450 mm² die).
+Four generations designed and FPGA-validated. N5 specification complete. Next steps: ASIC tapeout for N4-Edge (28 nm target, 100-300 mW) and N5 RTL implementation.
 
-If you are interested in partnering, collaborating, or have any other inquiries, please reach out to **henry@catalyst-neuromorphic.com**
+If you are interested in partnering, collaborating, or licensing, reach out to **henry@catalyst-neuromorphic.com**
 
 <p align="center">
   <a href="https://github.com/sponsors/Mr-wabbit">
