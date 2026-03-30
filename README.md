@@ -17,13 +17,9 @@ Both the N1 and N2 neuromorphic processors are fully open source under the Apach
 
 ## What is Catalyst?
 
-Catalyst is a company I founded in order to deal with the unsustainable amount of power that is being required every year for modern AI. So far I have made 3 designs, each better than the last, all of which have been validated on real FPGA hardware.
+Catalyst Neuromorphic designs spiking neural network processors for low-power edge inference. Four generations designed and FPGA-validated, each extending the previous.
 
-> **Note on FPGA validation**: The 128-core count is the architectural design target for ASIC. FPGA validation runs a subset: N2 fits 16 cores on the VU47P (1999/3576 BRAM36K), N3 fits 8 cores (1 tile). The FPGA proves functional correctness of the core logic, NoC routing, learning engine, and spike processing. Please note this is not a claim that the full 128-core design fits on a single FPGA.
-
-**Catalyst Cloud** (still work in progress): REST API for neuromorphic simulation. Currently in early development, if you would like access feel free to email me at henry@catalyst-neuromorphic.com and I will be able to help you get access for free.
-
-**FPGA Dev Boards** (work in progress): Physical hardware for neuromorphic simulation.
+> **Note on FPGA validation**: Full core counts (128 for N1-N3, 512 for N4) are the ASIC design targets. FPGA validation runs reduced configurations that prove functional correctness of the core logic, NoC routing, learning engine, and spike processing.
 
 ---
 
@@ -226,65 +222,11 @@ N2 targets Loihi 2 feature parity. Three capabilities requiring physical multi-c
 
 ---
 
-## Try It Now
-
-### Catalyst Cloud API (Early Development)
-
-Neuromorphic compute as a service. Define a network, submit a job, get spikes back.
-
-```python
-import catalyst_cloud as cc
-
-# Create a client (email henry@catalyst-neuromorphic.com for a free key)
-client = cc.Client("cn_live_...")
-
-# Define a network
-net = client.create_network(
-    populations=[
-        {"label": "input", "size": 100, "params": {"threshold": 1000}},
-        {"label": "hidden", "size": 50},
-    ],
-    connections=[
-        {"source": "input", "target": "hidden", "topology": "random_sparse",
-         "weight": 500, "p": 0.3},
-    ],
-)
-
-# Run simulation (blocking)
-result = client.simulate(
-    network_id=net["network_id"],
-    timesteps=1000,
-    stimuli=[{"population": "input", "current": 5000}],
-)
-
-print(result["result"]["firing_rates"])
-```
-
-```bash
-pip install catalyst-cloud
-```
-
-- **Interactive demo**: [HuggingFace Spaces](https://huggingface.co/spaces/Catalyst-Neuromorphic/catalyst-cloud)
-
-### FPGA Dev Boards
-
-Physical hardware with the Catalyst bitstream. Planned for [Crowd Supply](https://www.crowdsupply.com/).
-
----
-
 ## Roadmap
 
 Four generations designed and FPGA-validated. N5 specification complete. Next steps: ASIC tapeout for N4-Edge (28 nm target, 100-300 mW) and N5 RTL implementation.
 
-If you are interested in partnering, collaborating, or licensing, reach out to **henry@catalyst-neuromorphic.com**
-
-<p align="center">
-  <a href="https://github.com/sponsors/Mr-wabbit">
-    <img src="https://img.shields.io/badge/Sponsor-Support_Catalyst-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="Sponsor on GitHub" />
-  </a>
-</p>
-
-You can also back development directly via [GitHub Sponsors](https://github.com/sponsors/Mr-wabbit).
+For partnerships, licensing, or collaboration: **henry@catalyst-neuromorphic.com**
 
 ---
 
@@ -324,6 +266,5 @@ I am more than open to hear from anyone with any interest in my work or in the g
 
 - **Email**: henry@catalyst-neuromorphic.com
 - **Website**: [catalyst-neuromorphic.com](https://catalyst-neuromorphic.com)
-- **Cloud API**: [catalyst-neuromorphic.com/cloud](https://catalyst-neuromorphic.com/cloud)
 
 
