@@ -1,5 +1,6 @@
 # Catalyst Neurocore
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18881283.svg)](https://zenodo.org/records/18881283)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18728256.svg)](https://zenodo.org/records/18728256)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
@@ -274,6 +275,12 @@ You can also back development directly via [GitHub Sponsors](https://github.com/
 
 ## Papers
 
+> **Catalyst N4: A 512-Core Dual-Chiplet Neuromorphic Processor with 134M Virtual Neurons, Spike Tensor Core, and Hardware Neuroscience Primitives**
+>
+> Henry Arthur Shulayev Barnes, Catalyst Neuromorphic Ltd
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
+
 > **Catalyst N3: A 128-Core Hybrid Neuromorphic Processor with Hardware Virtualisation, Per-Tile Learning, and Silicon Metaplasticity**
 >
 > Henry Arthur Shulayev Barnes, Catalyst Neuromorphic Ltd
@@ -292,7 +299,7 @@ You can also back development directly via [GitHub Sponsors](https://github.com/
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
-**[N3 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n3.pdf)** | **[N2 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n2.pdf)** | **[N1 Paper (Zenodo)](https://zenodo.org/records/18727094)**
+**[N4 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n4.pdf)** | **[N3 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n3.pdf)** | **[N2 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n2.pdf)** | **[N1 Paper (Zenodo)](https://zenodo.org/records/18727094)**
 
 ---
 
