@@ -5,9 +5,9 @@
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18728256-blue)](https://zenodo.org/records/18728256)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
-## N1 and N2 are open source
+## N1, N2, and N3 are open source
 
-Both the N1 and N2 neuromorphic processors are fully open source under the Apache 2.0 license. Full RTL, testbenches, SDK, and FPGA build scripts included.
+The N1, N2, and N3 neuromorphic processors are fully open source under the Apache 2.0 license. Full RTL, testbenches, SDK, and FPGA build scripts included.
 
 **[catalyst-n1](https://github.com/catalyst-neuromorphic/catalyst-n1)** — 128 cores, 131K neurons, Loihi 1 parity. 14-opcode learning ISA, FPGA-validated on AWS F2 at 62.5 MHz.
 
@@ -39,8 +39,8 @@ Catalyst Neuromorphic designs spiking neural network processors for low-power ed
 | Security | — | — | — | **AES-256, Kyber, SRAM PUF** |
 | Embedded processors | 3× RV32IMF | 3× RV32IMF | 4× RV32IMC | **8× RV64GC + 14 custom ops** |
 | Neuroscience | — | — | Metaplasticity | **HDC, Hopfield, gap junctions, glial, sleep, neurogenesis** |
-| FPGA validated | 96/96 | 28/28 | 19/19 | **126/126** |
-| Open source | Apache 2.0 | Apache 2.0 | — | — |
+| FPGA validated | Yes | Yes | Yes | **Yes** |
+| Open source | Apache 2.0 | Apache 2.0 | Apache 2.0 | — |
 
 ---
 
@@ -57,9 +57,8 @@ Catalyst Neuromorphic designs spiking neural network processors for low-power ed
 | Memory | 256 KB L1 + 64 KB shadow + 2 MB L2 + 640 MB S3RAM + 48 GB HBM3E |
 | Security | AES-256-GCM, CRYSTALS-Kyber, SRAM PUF, lockstep, 14-step secure boot |
 | Embedded | 8x RV64GC with 14 custom neuromorphic opcodes |
-| FPGA | 126/126 tests, 14,983 ts/sec at 62.5 MHz (AWS F2) |
+| FPGA | All tests passing, 14,983 ts/sec at 62.5 MHz (AWS F2) |
 | Edge | N4-Edge on Kria K26: 2.59% LUT, 0.378 W, 100 MHz timing met |
-| Patent | UK filing, 69 claims |
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
 
@@ -67,7 +66,7 @@ Catalyst Neuromorphic designs spiking neural network processors for low-power ed
 
 ## Catalyst N3: Third Generation
 
-N3 introduces many new architectural features coming in at a count of 20 beyond what N2 offers, some key differentiators over Intel Loihi 2 are:
+N3 introduces 20 architectural features beyond N2. Selected differences from Loihi 2:
 
 | Feature | Catalyst N3 | Loihi 2 |
 |---|---|---|
@@ -76,15 +75,13 @@ N3 introduces many new architectural features coming in at a count of 20 beyond 
 | **Hardware virtualization** | NeurOS: 680+ virtual networks, TDM context switching | Not available |
 | **Per-tile learning** | 16 independent accelerators (28-opcode ISA, 80 registers) | 1 global engine |
 | **Hardware metaplasticity** | 3-bit consolidation per synapse | Not available |
-| **Parameter groups** | 32/core → 4× neuron density | Not available |
-| **Spike compression** | DELTA/BURST/ADAPTIVE encoding | Not available |
-| **Homeostatic plasticity** | Hardware firing rate tracking + synaptic scaling | Not available |
-| **FACTOR compression** | Low-rank SVD synapse format, 2–8× savings | Not available |
-| **Winner-Take-All** | Hardware two-pass, configurable groups/k | Not available |
+| **Silicon proven** | FPGA-validated | Silicon-proven, in production |
+| **Multi-chip scaling** | Single-die | Native multi-chip mesh (Pohoiki Springs, Hala Point) |
+| **Software ecosystem** | Catalyst SDK | Lava framework, Intel toolchain |
 
 FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz, 1.923 W, 262,317 LUTs. Energy efficiency: 4.04 nJ/neuron-op (3.7x improvement over N2).
 
-**Benchmarks**: SSC **76.4%** (+6.6 over Loihi 2's hardware deployment), SHD **91.0%** (matching Loihi 2's 90.9%).
+**Benchmarks**: SSC **76.4%** (Loihi 2: 69.8%), SHD **91.0%** (Loihi 2: 90.9%).
 
 [![N3 Paper](https://zenodo.org/badge/DOI/10.5281/zenodo.18881283.svg)](https://zenodo.org/records/18881283)
 
@@ -94,13 +91,13 @@ FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz, 1.923 W,
 
 ### AWS F2 Cloud FPGA (Xilinx VU47P)
 
-| Processor | AFI | Tests | Throughput | Frequency | Power | LUTs |
-|-----------|-----|-------|------------|-----------|-------|------|
-| N4 | `agfi-0e19b3c801c4ba0ff` | 126/126 | 14,983 ts/sec | 62.5 MHz | — | — |
-| N4-Edge | `agfi-0e706213dcd11d40e` | 126/126 | 15,668 ts/sec | 62.5 MHz | — | — |
-| N3 | `agfi-0df16698ef37c59d9` | 19/19 | 14,512 ts/sec | 62.5 MHz | 1.923 W | 262,317 |
-| N2 | `agfi-0326f183a3aa95780` | 28/28 | 8,690 ts/sec | 62.5 MHz | 1.913 W | 228,393 |
-| N1 | `agfi-03e071bc88f912e77` | 96/96 | — | 62.5 MHz | 1.847 W | 189,970 |
+| Processor | Throughput | Frequency | Power | LUTs |
+|-----------|------------|-----------|-------|------|
+| N4 | 14,983 ts/sec | 62.5 MHz | — | — |
+| N4-Edge | 15,668 ts/sec | 62.5 MHz | — | — |
+| N3 | 14,512 ts/sec | 62.5 MHz | 1.923 W | 262,317 |
+| N2 | 8,690 ts/sec | 62.5 MHz | 1.913 W | 228,393 |
+| N1 | — | 62.5 MHz | 1.847 W | 189,970 |
 
 ### Kria K26 Edge Characterisation (xczu5ev-sfvc784-2-i, 100 MHz target)
 
@@ -130,7 +127,7 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 | Metric | Value |
 |---|---|
 | FPGA clock | **62.5 MHz** (all generations) |
-| N4 FPGA tests | **126/126** at 14,983 ts/sec |
+| N4 FPGA throughput | **14,983 ts/sec** |
 | N4-Edge K26 | **2.59% LUT**, 0.378 W, 100 MHz timing met |
 | ASIC projection (28 nm) | **9.3 mm², 19-38 mW** (N2) |
 
@@ -150,7 +147,7 @@ Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://gith
 | **DVS Gesture** | 11 | **89.4%** | — | — | 99.01% |
 | **GSC-12** | 12 | **88.0%** | — | — | 97.08% |
 
-N4 matches Loihi 2 on SHD and exceeds it on SSC by 6.6 points. Quantised inference shows 0.0-0.2% degradation, confirming hardware deployment readiness. The gap to software SOTA reflects training methodology (learnable delays, architecture search), not hardware limitation.
+Quantised inference shows 0.0-0.2% degradation, confirming hardware deployment readiness. The gap to software SOTA reflects training methodology (learnable delays, architecture search), not hardware limitation.
 
 ### N3
 
@@ -166,8 +163,8 @@ N4 matches Loihi 2 on SHD and exceeds it on SSC by 6.6 points. Quantised inferen
 
 | Benchmark | Classes | Architecture | Neuron | Float Acc | vs Competition |
 |---|---|---|---|---|---|
-| **SHD** | 20 | 700→512→20 (rec) | adLIF | **84.5%** | — |
-| **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | **72.1%** | Beats Loihi 2 (69.8%) |
+| **SHD** | 20 | 700→512→20 (rec) | adLIF | **91.0%** | — |
+| **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | **72.1%** | Loihi 2: 69.8% |
 | **N-MNIST** | 10 | Conv2D+LIF→10 | adLIF | **97.8%** | — |
 | **GSC KWS** | 12 | 40→512→12 (rec, S2S) | adLIF | **88.0%** | — |
 | **MIT-BIH ECG** | 5 | 187→128→5 (rec) | adLIF | **90.9%** | — |
@@ -234,7 +231,7 @@ N2 targets Loihi 2 feature parity. Three capabilities requiring physical multi-c
 
 ## Roadmap
 
-Four generations designed and FPGA-validated. N5 specification complete. Next steps: ASIC tapeout for N4-Edge (28 nm target, 100-300 mW) and N5 RTL implementation.
+Four generations designed and FPGA-validated. Next step: ASIC tapeout for N4-Edge (28 nm target, 100-300 mW).
 
 For partnerships, licensing, or collaboration: **henry@catalyst-neuromorphic.com**
 
