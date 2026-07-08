@@ -19,46 +19,54 @@ The N1, and N2 neuromorphic processors are fully open source under the Apache 2.
 
 Catalyst Neuromorphic designs spiking neural network processors for low-power edge inference. Four generations designed and FPGA-validated, each extending the previous.
 
-> **Note on FPGA validation**: Full core counts (128 for N1-N3, 512 for N4) are the ASIC design targets. FPGA validation runs reduced configurations that prove functional correctness of the core logic, NoC routing, learning engine, and spike processing.
+> **How to read the numbers**: anything marked *measured* was taken on physical FPGA hardware and is reproducible from this repo family. Anything marked *target* is an ASIC design goal with an engineering path behind it, not a measurement. The two are never mixed in one figure.
 
 ---
 
 ## Architecture at a Glance
 
-| Feature | N1 | N2 | N3 | **N4** |
-|---|---|---|---|---|
-| Cores | 128 | 128 | 128 (16 tiles) | **512 (dual chiplet)** |
-| Physical neurons | 131K | 131K | 524K-1M | **4.19M** |
-| Virtual neurons | — | — | 4.2M (TDM) | **134M (32-ctx TDM)** |
-| Neuron models | 1 (CUBA LIF) | 5 | 7+ | **5 + LTC + programmable 32-opcode** |
-| Synapse formats | 3 | 4 | 4 | **8 (inc. KAN B-spline)** |
-| Learning engine | 14-opcode | 16-opcode | 28-opcode per-tile | **32-opcode, 8-rule, 8 threads** |
-| Memory | 1 level | 1 level | 4 levels | **256 KB L1 + 2 MB L2 + 640 MB S3RAM + 48 GB HBM3E** |
-| Attention | — | — | — | **8-head + KV cache** |
-| Spike Tensor Core | — | — | — | **16×16, 256 ops/cycle** |
-| Security | — | — | — | **AES-256, Kyber, SRAM PUF** |
-| Embedded processors | 3× RV32IMF | 3× RV32IMF | 4× RV32IMC | **8× RV64GC + 14 custom ops** |
-| Neuroscience | — | — | Metaplasticity | **HDC, Hopfield, gap junctions, glial, sleep, neurogenesis** |
-| FPGA validated | Yes | Yes | Yes | **Yes** |
-| Open source | Apache 2.0 | Apache 2.0 | Apache 2.0 | — |
+| Feature | N1 | N2 | N3 | **N4 (measured, FPGA silicon)** | N4 ASIC (targets) |
+|---|---|---|---|---|---|
+| Cores | 128 | 128 | 128 (16 tiles) | **48 @ 62.5 MHz (VU47P)** | 512 |
+| Neurons | 131K | 131K | 524K-1M | **3,072 fabric / 1,044 deployed** | millions (SRAM-bound) |
+| Synaptic connections | — | — | — | **1.5M weighted, programmed and verified** | scaled CSR tables |
+| Neuron models | 1 (CUBA LIF) | 5 | 7+ | **3 (LIF, CUBA, adLIF), bit-exact on silicon** | 3 + on-chip learning |
+| Delivery fabric | — | — | — | **broadcast CSR, zero event loss (measured)** | same, multi-chip |
+| Determinism | — | — | — | **bit-exact vs golden model, every timestep** | carried by construction |
+| SHD on hardware | — | — | — | **90.28%, full 2,264-sample test set on chip** | — |
+| Open source | Apache 2.0 | Apache 2.0 | — | — | — |
 
 ---
 
 ## Catalyst N4: Fourth Generation
 
-512-core dual-chiplet architecture with 4.19M physical neurons expandable to 134M virtual via 32-context TDM. Introduces the Spike Tensor Core (16x16 conditional-add at 256 ops/cycle), 8-head spiking attention with KV cache, hardware backpropagation, and a suite of neuroscience primitives (hyperdimensional computing, Hopfield associative memory, gap junctions, glial cells, oscillators, sleep consolidation, neurogenesis).
+N4 is a deliver-mode spiking inference processor built around weighted CSR
+spike delivery, three fixed-point neuron models, and a deterministic step
+semantic. The defining property is verifiability: the silicon reproduces a
+mathematical golden model bit-for-bit, timestep by timestep, across the whole
+deployed network.
+
+**Measured on AWS F2 silicon (VU47P, July 2026):**
 
 | | |
 |---|---|
-| Cores | 512 (2 NCCs x 32 tiles x 8 cores) |
-| Neurons | 4.19M physical, 134M virtual (TDM) |
-| Synapse formats | 8 (Full, Inference, Compact, Factor, Dual-Weight, Block-Sparse, Delta, KAN) |
-| Learning | 32-opcode ISA, 8 rules, 8 threads, 256 registers, hardware backprop |
-| Memory | 256 KB L1 + 64 KB shadow + 2 MB L2 + 640 MB S3RAM + 48 GB HBM3E |
-| Security | AES-256-GCM, CRYSTALS-Kyber, SRAM PUF, lockstep, 14-step secure boot |
-| Embedded | 8x RV64GC with 14 custom neuromorphic opcodes |
-| FPGA | All tests passing, 14,983 ts/sec at 62.5 MHz (AWS F2) |
-| Edge | N4-Edge on Kria K26: 2.59% LUT, 0.378 W, 100 MHz timing met |
+| Configuration | 48 cores (6 tiles x 8), 62.5 MHz |
+| Deployed network | 1,024 recurrent adLIF + 20 readout units, 1.5M connections |
+| State trace check | every neuron, every timestep, bit-exact vs golden model |
+| SHD accuracy | **90.28% (2,044/2,264), full test set executed on chip** |
+| Deployment loss | **zero** — silicon matches the trained int16 model exactly, sample for sample |
+| Event integrity | zero dropped spikes across 18M+ routed events; peak queue depth 548/1024 |
+| Timing | WNS +0.444 ns at 62.5 MHz |
+| Edge variant | N4-Edge on Kria K26: 2.59% LUT, 0.378 W measured, 100 MHz timing met |
+
+Two variants share the verified core:
+
+- **N4-Edge** — SWaP-constrained deployments (UAV, interceptor, sensor-fusion
+  nodes). ASIC target: 28 nm, 100-300 mW.
+- **N4** — rack-scale inference. ASIC targets: 512 cores, neuron counts set by
+  SRAM area, on-chip learning, RV64GC management complex, high-bandwidth
+  external memory. Each target moves to the measured column when it is built
+  and measured, not before.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
 
@@ -91,13 +99,12 @@ FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz, 1.923 W,
 
 ### AWS F2 Cloud FPGA (Xilinx VU47P)
 
-| Processor | Throughput | Frequency | Power | LUTs |
-|-----------|------------|-----------|-------|------|
-| N4 | 14,983 ts/sec | 62.5 MHz | — | — |
-| N4-Edge | 15,668 ts/sec | 62.5 MHz | — | — |
-| N3 | 14,512 ts/sec | 62.5 MHz | 1.923 W | 262,317 |
-| N2 | 8,690 ts/sec | 62.5 MHz | 1.913 W | 228,393 |
-| N1 | — | 62.5 MHz | 1.847 W | 189,970 |
+| Processor | AFI | Validation | Frequency | Power | LUTs |
+|-----------|-----|------------|-----------|-------|------|
+| N4 (48-core) | `agfi-06fc2ebd50bfcb624` | bit-exact state trace + full SHD test set on chip | 62.5 MHz | — (F2 exposes no tenant power interface) | 324,737 (CL partition) |
+| N3 | `agfi-0df16698ef37c59d9` | 14,512 ts/sec | 62.5 MHz | 1.923 W | 262,317 |
+| N2 | `agfi-0326f183a3aa95780` | 8,690 ts/sec | 62.5 MHz | 1.913 W | 228,393 |
+| N1 | `agfi-03e071bc88f912e77` | — | 62.5 MHz | 1.847 W | 189,970 |
 
 ### Kria K26 Edge Characterisation (xczu5ev-sfvc784-2-i, 100 MHz target)
 
@@ -127,7 +134,7 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 | Metric | Value |
 |---|---|
 | FPGA clock | **62.5 MHz** (all generations) |
-| N4 FPGA throughput | **14,983 ts/sec** |
+| N4 silicon | **bit-exact vs golden model; SHD 90.28% on chip, full test set; zero event loss** |
 | N4-Edge K26 | **2.59% LUT**, 0.378 W, 100 MHz timing met |
 | ASIC projection (28 nm) | **9.3 mm², 19-38 mW** (N2) |
 
@@ -137,17 +144,18 @@ N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflect
 
 Full benchmark suite: **[catalyst-neuromorphic/catalyst-benchmarks](https://github.com/catalyst-neuromorphic/catalyst-benchmarks)**. Clone, train, deploy, reproduce.
 
-### N4 (Latest)
+### N4 (silicon, July 2026)
 
-| Benchmark | Classes | Float Acc | Quantised (int16) | vs Loihi 2 | SOTA |
-|---|---|---|---|---|---|
-| **SHD** | 20 | **91.0%** | 90.8% (-0.2%) | 90.9% | 96.41% |
-| **SSC** | 35 | **76.4%** | 76.4% (0.0%) | 69.8% | 85.98% |
-| **N-MNIST** | 10 | **99.2%** | — | — | ~99.7% |
-| **DVS Gesture** | 11 | **89.4%** | — | — | 99.01% |
-| **GSC-12** | 12 | **88.0%** | — | — | 97.08% |
+| Benchmark | Classes | Trained int16 model | On-chip (full test set) | Loihi 2 hardware |
+|---|---|---|---|---|
+| **SHD** | 20 | 90.28% | **90.28% (2,044/2,264)** | 90.9% |
 
-Quantised inference shows 0.0-0.2% degradation, confirming hardware deployment readiness. The gap to software SOTA reflects training methodology (learnable delays, architecture search), not hardware limitation.
+The on-chip figure is the entire SHD test set executed on the FPGA silicon,
+not a sample. Deployment cost is exactly zero: the chip's prediction matches
+the trained quantised model on every one of the 2,264 samples, a consequence
+of the bit-exact execution semantics. Additional benchmarks move into this
+table as they are deployed and measured on hardware; software-only results
+for other datasets live in the N1-N3 sections below.
 
 ### N3
 
@@ -231,7 +239,12 @@ N2 targets Loihi 2 feature parity. Three capabilities requiring physical multi-c
 
 ## Roadmap
 
-Four generations designed and FPGA-validated. Next step: ASIC tapeout for N4-Edge (28 nm target, 100-300 mW).
+Current work, in order: neuron capacity scale-up on the existing FPGA
+(state arrays to URAM/BRAM), on-chip learning built to the same bit-exact
+verification standard, RV64GC management core integration (CVA6), external
+memory hierarchy, then the N4-Edge ASIC program (28 nm target, 100-300 mW).
+Every roadmap item ships with a hardware measurement or it stays on the
+roadmap.
 
 For partnerships, licensing, or collaboration: **henry@catalyst-neuromorphic.com**
 
