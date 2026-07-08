@@ -5,9 +5,9 @@
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18728256-blue)](https://zenodo.org/records/18728256)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
-## N1, N2, and N3 are open source
+## N1, and N2 are open source
 
-The N1, N2, and N3 neuromorphic processors are fully open source under the Apache 2.0 license. Full RTL, testbenches, SDK, and FPGA build scripts included.
+The N1, and N2 neuromorphic processors are fully open source under the Apache 2.0 license. Full RTL, testbenches, SDK, and FPGA build scripts included.
 
 **[catalyst-n1](https://github.com/catalyst-neuromorphic/catalyst-n1)** — 128 cores, 131K neurons, Loihi 1 parity. 14-opcode learning ISA, FPGA-validated on AWS F2 at 62.5 MHz.
 
