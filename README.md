@@ -26,8 +26,8 @@ Catalyst Neuromorphic designs spiking neural network processors for low-power ed
 | Feature | N1 | N2 | N3 | **N4 (measured, FPGA silicon)** | N4 ASIC (targets) |
 |---|---|---|---|---|---|
 | Cores | 128 | 128 | 128 (16 tiles) | **48 @ 62.5 MHz (VU47P)** | 512 |
-| Neurons | 131K | 131K | 524K-1M | **3,072 fabric / 1,044 deployed** | millions (SRAM-bound) |
-| Synaptic connections | — | — | — | **1.5M weighted, programmed and verified** | scaled CSR tables |
+| Neurons | 131K | 131K | 524K-1M | **393,216 validated (48 x 8,192)** | millions (SRAM-bound) |
+| Synaptic connections | — | — | — | **1.5M in the SHD network (verified)** | scaled CSR tables |
 | Neuron models | 1 (CUBA LIF) | 5 | 7+ | **3 (LIF, CUBA, adLIF), bit-exact on silicon** | 3 + on-chip learning |
 | Delivery fabric | — | — | — | **broadcast CSR, zero event loss (measured)** | same, multi-chip |
 | Determinism | — | — | — | **bit-exact vs golden model, every timestep** | carried by construction |
@@ -43,6 +43,11 @@ spike delivery, three fixed-point neuron models, and a deterministic step
 semantic. The defining property is verifiability: the silicon reproduces a
 mathematical golden model bit-for-bit, timestep by timestep, across the whole
 deployed network.
+
+The fabric has been validated bit-exact against ideal dense computation up to
+**393,216 neurons** on a single FPGA (48 cores x 8,192), the full scaling range.
+The SHD benchmark below runs a smaller 1,044-neuron network (1,024 recurrent
+adLIF + 20 readout).
 
 **Measured on AWS F2 silicon (VU47P, July 2026):**
 
@@ -98,7 +103,7 @@ Each processor synthesised as a 2-core edge variant with AXI-Lite PS interface o
 | **N2** | 26,431 | 22.6% | 38,666 | 16.5% | 52.5 (36.5%) | 16 (1.3%) | -0.168ns | ~97 MHz | 0.688W |
 | **N3** | 53,420 | 45.6% | 80,395 | 34.3% | 24 (16.7%) | 20 (1.6%) | -7.075ns | ~58.5 MHz | 0.867W |
 
-N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflects its richer feature set (68 features, hardware ECC, asynchronous NoC); pipeline register insertion is expected to close this to 80-90 MHz.
+N1 meets timing at 100 MHz. N2 narrowly misses (97 MHz). N3's timing gap reflects its richer datapath (hardware ECC, asynchronous NoC); pipeline register insertion is expected to close this to 80-90 MHz.
 
 ### ASIC Projections (SKY130 130nm Synthesis)
 
