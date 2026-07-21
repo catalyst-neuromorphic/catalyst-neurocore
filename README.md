@@ -1,17 +1,15 @@
 # Catalyst Neurocore
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18881283.svg)](https://zenodo.org/records/18881283)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18728256-blue)](https://zenodo.org/records/18728256)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
 
-## N1, and N2 are open source
+## N1 and N2 are open source
 
-The N1, and N2 neuromorphic processors are fully open source under the Apache 2.0 license. Full RTL, testbenches, SDK, and FPGA build scripts included.
+The N1 and N2 neuromorphic processors are open source under the Apache 2.0 license. Full RTL, testbenches, SDK, and FPGA build scripts included. Both are independently developed, drawing on published neuromorphic concepts including Loihi.
 
-**[catalyst-n1](https://github.com/catalyst-neuromorphic/catalyst-n1)** — 128 cores, 131K neurons, Loihi 1 parity. 14-opcode learning ISA, FPGA-validated on AWS F2 at 62.5 MHz.
+**[catalyst-n1](https://github.com/catalyst-neuromorphic/catalyst-n1)** — 128 cores, 131K neurons, current-based LIF, 14-opcode learning ISA, FPGA-validated on AWS F2 at 62.5 MHz.
 
-**[catalyst-n2](https://github.com/catalyst-neuromorphic/catalyst-n2)** — 128 cores, 131K neurons, full Loihi 2 feature parity. 5 neuron models, 16-opcode programmable microcode, variable-precision weights (1-16 bit), graded spikes.
+**[catalyst-n2](https://github.com/catalyst-neuromorphic/catalyst-n2)** — 128 cores, 131K neurons. Programmable neuron microcode (16-opcode), variable-precision weights (1-16 bit), graded spikes, richer plasticity.
 
 ---
 
@@ -68,30 +66,13 @@ Two variants share the verified core:
   external memory. Each target moves to the measured column when it is built
   and measured, not before.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
-
 ---
 
 ## Catalyst N3: Third Generation
 
-N3 introduces 20 architectural features beyond N2. Selected differences from Loihi 2:
+N3 is an architectural exploration. It introduced time-division virtualisation of physical cores across multiple resident networks, per-core selectable precision, spike compression, an asynchronous inter-tile NoC, and metaplasticity. These ideas were validated functionally on FPGA and carried forward, in rigorous bit-exact form, into N4.
 
-| Feature | Catalyst N3 | Loihi 2 |
-|---|---|---|
-| **ANN INT8 MAC mode** | Per-core hybrid ANN/SNN toggle | Not available |
-| **4-level memory** | L1→L2→L3(HBM)→L4(CXL), 500M+ synapses | 2-level on-chip |
-| **Hardware virtualization** | NeurOS: 680+ virtual networks, TDM context switching | Not available |
-| **Per-tile learning** | 16 independent accelerators (28-opcode ISA, 80 registers) | 1 global engine |
-| **Hardware metaplasticity** | 3-bit consolidation per synapse | Not available |
-| **Silicon proven** | FPGA-validated | Silicon-proven, in production |
-| **Multi-chip scaling** | Single-die | Native multi-chip mesh (Pohoiki Springs, Hala Point) |
-| **Software ecosystem** | Catalyst SDK | Lava framework, Intel toolchain |
-
-FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz, 1.923 W, 262,317 LUTs. Energy efficiency: 4.04 nJ/neuron-op (3.7x improvement over N2).
-
-**Benchmarks**: SSC **76.4%** (Loihi 2: 69.8%), SHD **91.0%** (Loihi 2: 90.9%).
-
-[![N3 Paper](https://zenodo.org/badge/DOI/10.5281/zenodo.18881283.svg)](https://zenodo.org/records/18881283)
+FPGA validation: 8-core tile on AWS F2, 14,512 timesteps/sec, 62.5 MHz. N3's benchmark accuracies are software figures (see the benchmarks repo), not on-chip measurements.
 
 ---
 
@@ -171,7 +152,7 @@ for other datasets live in the N1-N3 sections below.
 
 | Benchmark | Classes | Architecture | Neuron | Float Acc | vs Competition |
 |---|---|---|---|---|---|
-| **SHD** | 20 | 700→512→20 (rec) | adLIF | **91.0%** | — |
+| **SHD** | 20 | 700→512→20 (rec) | adLIF | **84.5%** | — |
 | **SSC** | 35 | 700→1024→512→35 (rec) | adLIF | **72.1%** | Loihi 2: 69.8% |
 | **N-MNIST** | 10 | Conv2D+LIF→10 | adLIF | **97.8%** | — |
 | **GSC KWS** | 12 | 40→512→12 (rec, S2S) | adLIF | **88.0%** | — |
@@ -188,7 +169,7 @@ for other datasets live in the N1-N3 sections below.
 
 N1 uses only basic LIF neurons (no adaptation). The accuracy demonstrates that even the simplest spiking neuron model achieves competitive performance at sufficient scale.
 
-All models trained with surrogate gradient BPTT and deployed to Catalyst FPGA hardware with int16 quantization.
+The N1-N3 figures above are software results (trained int16 models). The only on-chip accuracy measurement is N4 (SHD 90.28%, reported above).
 
 ### Quantised Inference (int16 fixed-point)
 
@@ -217,26 +198,6 @@ python shd/train.py --neuron adlif --hidden 1536 --epochs 200 --device cuda:0 --
 
 ---
 
-## Feature Parity Scorecard (N2)
-
-N2 targets Loihi 2 feature parity. Three capabilities requiring physical multi-chip I/O are not applicable to FPGA development boards. N3 adds 20 additional capabilities (see above).
-
-| Category | Loihi 1 | Loihi 2 | Catalyst |
-|---|---|---|---|
-| LIF neuron model | Yes | Yes | Yes |
-| Dendritic compartments | Yes | Yes | Yes |
-| Programmable learning | Yes | Yes | Yes |
-| STDP | Yes | Yes | Yes |
-| 3-factor learning | Yes | Yes | Yes |
-| Graded spikes | No | Yes | Yes |
-| Stochastic rounding | No | Yes | Yes |
-| Homeostasis | Yes | Yes | Yes |
-| Programmable delays | Yes | Yes | Yes |
-| Embedded processors | 3x LMT | 6x LMT | 3x RV32IMF |
-| **Score** | **10/10** | **10/10** | **10/10** |
-
----
-
 ## Roadmap
 
 Current work, in order: neuron capacity scale-up on the existing FPGA
@@ -252,31 +213,10 @@ For partnerships, licensing, or collaboration: **henry@catalyst-neuromorphic.com
 
 ## Papers
 
-> **Catalyst N4: A 512-Core Dual-Chiplet Neuromorphic Processor with 134M Virtual Neurons, Spike Tensor Core, and Hardware Neuroscience Primitives**
->
-> Henry Arthur Shulayev Barnes, Catalyst Neuromorphic Ltd
+- **Catalyst N2** — [DOI 10.5281/zenodo.18728256](https://zenodo.org/records/18728256)
+- **Catalyst N1** — [DOI 10.5281/zenodo.18727094](https://zenodo.org/records/18727094)
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19332513.svg)](https://zenodo.org/records/19332513)
-
-> **Catalyst N3: A 128-Core Hybrid Neuromorphic Processor with Hardware Virtualisation, Per-Tile Learning, and Silicon Metaplasticity**
->
-> Henry Arthur Shulayev Barnes, Catalyst Neuromorphic Ltd
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18881283.svg)](https://zenodo.org/records/18881283)
-
-> **Catalyst N2: Full Loihi 2 Feature Parity in an Open Neuromorphic Processor with Programmable Neuron Microcode and Cloud FPGA Validation**
->
-> Henry Arthur Shulayev Barnes, University of Aberdeen
-
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.18728256-blue)](https://zenodo.org/records/18728256)
-
-> **Catalyst N1: A 131K-Neuron Open Neuromorphic Processor with Programmable Synaptic Plasticity and FPGA Validation**
->
-> Henry Arthur Shulayev Barnes, University of Aberdeen
-
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18727094.svg)](https://zenodo.org/records/18727094)
-
-**[N4 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n4.pdf)** | **[N3 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n3.pdf)** | **[N2 Paper (PDF)](https://catalyst-neuromorphic.com/papers/catalyst-n2.pdf)** | **[N1 Paper (Zenodo)](https://zenodo.org/records/18727094)**
+A consolidated paper covering the N1-N4 family is in preparation.
 
 ---
 
